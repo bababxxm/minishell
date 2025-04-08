@@ -6,7 +6,7 @@
 /*   By: sklaokli <sklaokli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 02:01:41 by sklaokli          #+#    #+#             */
-/*   Updated: 2025/04/09 02:02:21 by sklaokli         ###   ########.fr       */
+/*   Updated: 2025/04/09 04:24:23 by sklaokli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,9 @@
 
 typedef enum e_quote_type
 {
-	DOUBLE,
-	SINGLE,
-	UNQUOTED,
+	QT_DOUBLE,
+	QT_SINGLE,
+	QT_UNQUOTED
 }	t_quote_type;
 
 typedef enum e_token_type
@@ -33,10 +33,10 @@ typedef enum e_token_type
 
 typedef struct s_token
 {
-    char                *argv;
-    t_token_type        token;
-	t_quote_type		quote;
     struct s_token      *next;
+    char                *argv;
+    t_token_type        tk_type;
+	t_quote_type		qt_type;
 }   t_token;
 
 #endif
