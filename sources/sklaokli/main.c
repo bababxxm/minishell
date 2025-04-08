@@ -6,24 +6,24 @@
 /*   By: sklaokli <sklaokli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 18:22:18 by sklaokli          #+#    #+#             */
-/*   Updated: 2025/04/07 00:03:41 by sklaokli         ###   ########.fr       */
+/*   Updated: 2025/04/08 19:47:55 by sklaokli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/minishell.h"
+#include "../../include/minishell.h"
 
 void    sighandler(int sig, siginfo_t *info, void *ucontext)
 {
     if (sig == SIGINT)
     {
-        printf("\n");
+        printf("\n%s$ ", PROMPT);
     }
 }
 
 char    *parser(char *input)
 {
     add_history(input);
-    // free(input);
+    free(input);
     return (input);
 }
 
@@ -35,11 +35,13 @@ void    execute(char *input, t_shell *shell)
 
 void    init_shell(t_shell *shell)
 {
-    shell->sa.sa_sigaction = &sighandler;
-	shell->sa.sa_flags = SA_SIGINFO;
-	sigemptyset(&shell->sa.sa_mask);
-    signal(SIGINT, SIG_IGN);
-    sigaction(SIGQUIT, &shell->sa, NULL);
+    struct sigaction    sa;
+    
+    sa.sa_sigaction = &sighandler;
+	sa.sa_flags = SA_SIGINFO;
+	sigemptyset(&sa.sa_mask);
+    sigaction(SIGINT, &sa, NULL);
+    sigaction(SIGQUIT, &sa, NULL);
 }
 
 void    exit_shell(t_shell *shell)

@@ -6,7 +6,7 @@
 /*   By: sklaokli <sklaokli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 18:22:50 by sklaokli          #+#    #+#             */
-/*   Updated: 2025/04/08 19:15:28 by sklaokli         ###   ########.fr       */
+/*   Updated: 2025/04/09 00:01:53 by sklaokli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@
 # define CYAN "\033[0;36m"
 # define RESET "\033[0m"
 
-# define PROMPT "hellscript"
+# define PROMPT "minishell"
 
 typedef enum e_status
 {
@@ -35,19 +35,27 @@ typedef enum e_status
 	SUCCESS
 }	t_status;
 
+typedef struct s_tree
+{
+	char			*cmd;
+	struct s_tree	*left;
+	struct s_tree	*right;
+}	t_tree;
+
+typedef struct s_env
+{
+	char			*key;
+	char			equal;
+	char			*value;
+	struct s_env	*next;
+}	t_env;
+
 typedef struct s_shell
 {
 	char			*input;
 	char			*line;
-	struct sigacton	sa;
+	t_env			*env;
+	t_tree			*token;
 }	t_shell;
-
-typedef struct s_data
-{
-	char			*data;
-	struct s_data	*left;
-	struct s_data	*right;
-}	t_data;
-
 
 #endif

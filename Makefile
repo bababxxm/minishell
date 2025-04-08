@@ -6,7 +6,7 @@
 #    By: sklaokli <sklaokli@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/18 19:44:55 by sklaokli          #+#    #+#              #
-#    Updated: 2025/04/08 19:24:52 by sklaokli         ###   ########.fr        #
+#    Updated: 2025/04/08 19:31:57 by sklaokli         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,7 +20,6 @@ INC_DIR		:=	include
 
 ## Source files
 SRC			:=	$(addprefix $(SRC_DIR)/, $(FILES))
-
 FILES		:=	sklaokli/main.c
 
 ## Include files
