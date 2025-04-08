@@ -6,7 +6,7 @@
 /*   By: sklaokli <sklaokli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 19:47:23 by sklaokli          #+#    #+#             */
-/*   Updated: 2025/04/09 00:08:25 by sklaokli         ###   ########.fr       */
+/*   Updated: 2025/04/09 00:35:17 by sklaokli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,15 +140,42 @@ char	*search_env(char *key, t_env *env)
 	return (NULL);
 }
 
+void	clear_env(t_env *env)
+{
+	t_env	*tmp;
+
+	while (env)
+	{
+		tmp = env;
+		env = env->next;
+		if (tmp->key)
+			free(tmp->key);
+		if (tmp->value)
+			free(tmp->value);
+		free(tmp);
+	}
+}
+
+void	print_env(t_env *env)
+{
+	while (env)
+	{
+		if (env->key)
+			printf("%s", env->key);
+		if (env->equal)
+			printf("%c", env->equal);
+		if (env->value)
+			printf("%s", env->value);
+		printf("\n");
+		env = env->next;
+	}
+}
+
 int	main(int ac, char *av[], char *env[])
 {
 	t_shell	shell;
 
 	shell.env = dup_env(env);
-	while (shell.env)
-	{
-		printf("%s%c%s\n", shell.env->key, shell.env->equal, shell.env->value);
-		shell.env = shell.env->next;
-	}
-	// printf("%s", search_env("PATH", shell.env));
+	print_env(shell.env);
+	clear_env(shell.env);
 }
