@@ -6,7 +6,7 @@
 /*   By: sklaokli <sklaokli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 19:47:23 by sklaokli          #+#    #+#             */
-/*   Updated: 2025/04/09 00:35:17 by sklaokli         ###   ########.fr       */
+/*   Updated: 2025/04/09 02:16:38 by sklaokli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -169,13 +169,4 @@ void	print_env(t_env *env)
 		printf("\n");
 		env = env->next;
 	}
-}
-
-int	main(int ac, char *av[], char *env[])
-{
-	t_shell	shell;
-
-	shell.env = dup_env(env);
-	print_env(shell.env);
-	clear_env(shell.env);
 }
