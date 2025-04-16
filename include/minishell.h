@@ -25,12 +25,17 @@
 
 # include "token.h"
 # include "command.h"
+# include "../libft/include/libft.h"
 
 # define GREEN "\033[0;32m"
 # define CYAN "\033[0;36m"
 # define RESET "\033[0m"
 
 # define PROMPT GREEN"➜ "RESET
+
+# ifndef PATH_MAX
+#  define PATH_MAX 4096
+# endif
 
 typedef struct s_list
 {
