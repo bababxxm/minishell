@@ -5,12 +5,22 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: sklaokli <sklaokli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/08 19:47:23 by sklaokli          #+#    #+#             */
-/*   Updated: 2025/04/19 21:40:36 by sklaokli         ###   ########.fr       */
+/*   Created: 2025/04/19 21:58:04 by sklaokli          #+#    #+#             */
+/*   Updated: 2025/04/19 21:58:34 by sklaokli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int	ft_strlen_to_c(char *str, char c)
+{
+	int	len;
+
+	len = 0;
+	while (str[len] && str[len] != c)
+		len++;
+	return (len);
+}
 
 t_env	*new_env(char *key, char equal, char *value)
 {
