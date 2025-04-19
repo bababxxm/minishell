@@ -1,4 +1,4 @@
-#include "../../include/minishell.h"
+#include "minishell.h"
 
 bool	update_path(t_shell *shell, char *path)
 {

@@ -6,11 +6,11 @@
 /*   By: sklaokli <sklaokli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 18:22:18 by sklaokli          #+#    #+#             */
-/*   Updated: 2025/04/09 05:14:23 by sklaokli         ###   ########.fr       */
+/*   Updated: 2025/04/19 21:40:36 by sklaokli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minishell.h"
+#include "minishell.h"
 
 // void    sighandler(int sig, siginfo_t *info, void *ucontext)
 // {
@@ -29,7 +29,7 @@ char    *parser(char *input, t_shell *shell)
     get_tokens(input);
     // while (input[++i])
     // {
-    //     node_addback(&token, new_token());
+    //     ft_lstadd_back(&token, new_token());
     // }
     return (NULL);
 }

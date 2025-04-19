@@ -1,4 +1,4 @@
-#include "../../include/minishell.h"
+#include "minishell.h"
 
 int	pwd_builtin(t_shell *shell)
 {

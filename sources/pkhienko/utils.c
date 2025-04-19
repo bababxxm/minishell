@@ -6,11 +6,11 @@
 /*   By: sklaokli <sklaokli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 04:08:36 by sklaokli          #+#    #+#             */
-/*   Updated: 2025/04/09 04:15:36 by sklaokli         ###   ########.fr       */
+/*   Updated: 2025/04/19 21:40:36 by sklaokli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minishell.h"
+#include "minishell.h"
 
 int	ft_strlen(char *str)
 {
@@ -71,7 +71,7 @@ void	*last_node(void *node)
 	return (list);
 }
 
-void	node_addback(void **node, void *new)
+void	ft_lstadd_back(void **node, void *new)
 {
 	t_list	*last;
 	t_list	**list;

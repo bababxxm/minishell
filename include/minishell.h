@@ -6,7 +6,7 @@
 /*   By: sklaokli <sklaokli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 18:22:50 by sklaokli          #+#    #+#             */
-/*   Updated: 2025/04/09 05:14:34 by sklaokli         ###   ########.fr       */
+/*   Updated: 2025/04/19 21:40:36 by sklaokli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,9 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 
+# include "libft.h"
 # include "token.h"
 # include "command.h"
-# include "../libft/include/libft.h"
 
 # define GREEN "\033[0;32m"
 # define CYAN "\033[0;36m"
@@ -36,11 +36,6 @@
 # ifndef PATH_MAX
 #  define PATH_MAX 4096
 # endif
-
-typedef struct s_list
-{
-	struct s_list	*next;
-}   t_list;
 
 typedef struct s_env
 {
@@ -65,12 +60,9 @@ typedef struct s_shell
 }	t_shell;
 
 // utils
-int		ft_strlen(char *str);
 int		ft_strlen_to_c(char *str, char c);
-int		ft_strncmp(const char *s1, const char *s2, size_t n);
-char	*ft_strdup(char *src);
 void	*last_node(void *node);
-void	node_addback(void **node, void *new);
+void	ft_lstadd_back(void **node, void *new);
 
 // env
 t_env	*new_env(char *key, char equal, char *value);

@@ -6,11 +6,11 @@
 /*   By: sklaokli <sklaokli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 19:47:23 by sklaokli          #+#    #+#             */
-/*   Updated: 2025/04/09 04:18:35 by sklaokli         ###   ########.fr       */
+/*   Updated: 2025/04/19 21:40:36 by sklaokli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minishell.h"
+#include "minishell.h"
 
 t_env	*new_env(char *key, char equal, char *value)
 {
@@ -60,7 +60,7 @@ t_env	*dup_env(char *env[])
 			j++;
 		j++;
 		value = dup_var(&env[i][j], '\0');
-		node_addback((void *)&dup, new_env(key, '=', value));
+		ft_lstadd_back((void *)&dup, new_env(key, '=', value));
 	}
 	return (dup);
 }

@@ -1,26 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstsize_bonus.c                                 :+:      :+:    :+:   */
+/*   ft_lstlast.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pkhienko <pkhienko@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sklaokli <sklaokli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/29 14:19:54 by pkhienko          #+#    #+#             */
-/*   Updated: 2024/09/13 00:14:17 by pkhienko         ###   ########.fr       */
+/*   Created: 2024/08/29 14:29:46 by pkhienko          #+#    #+#             */
+/*   Updated: 2025/04/19 21:14:47 by sklaokli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/libft.h"
+#include "libft.h"
 
-int	ft_lstsize(t_list *lst)
+void	*ft_lstlast(void *lst)
 {
-	unsigned int	cnt;
+	t_list	*tmp;
 
-	cnt = 0;
-	while (lst != NULL)
-	{
-		cnt++;
-		lst = lst->next;
-	}
-	return (cnt);
+	tmp = lst;
+	while (tmp && tmp->next)
+		tmp = tmp->next;
+	return (tmp);
 }

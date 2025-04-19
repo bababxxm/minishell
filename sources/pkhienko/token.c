@@ -6,11 +6,11 @@
 /*   By: sklaokli <sklaokli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 04:08:50 by sklaokli          #+#    #+#             */
-/*   Updated: 2025/04/09 05:58:14 by sklaokli         ###   ########.fr       */
+/*   Updated: 2025/04/19 21:40:36 by sklaokli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minishell.h"
+#include "minishell.h"
 
 t_token	*new_token(char *argv, t_token_type tk_type, t_quote_type qt_type)
 {
@@ -64,7 +64,7 @@ t_token	*get_tokens(char *input)
 			i++;
 		input[i] = '\0';
 		printf("%s\n", tmp.argv);
-		node_addback((void *)&tokens, new_token(tmp.argv, \
+		ft_lstadd_back((void *)&tokens, new_token(tmp.argv, \
 			get_token_type(tmp.argv), get_quote_type(tmp.argv)));
 	}
 	return (NULL);

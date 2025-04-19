@@ -1,33 +1,67 @@
-NAME			= libft.a
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: sklaokli <sklaokli@student.42.fr>          +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2025/04/19 21:00:46 by sklaokli          #+#    #+#              #
+#    Updated: 2025/04/19 21:04:54 by sklaokli         ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
 
-SOURCES			= $(shell find src -type f -name "*.c")
+## Library name
+NAME		:=	libft.a
 
-OBJECTS			= $(patsubst src/%.c, obj/%.o, $(SOURCES))
+## Paths
+SRC_DIR		:=	src
+OBJ_DIR		:=	obj
+INC_DIR		:=	include
 
-HEADERS 		= -I include
+## Get all .c files from src/**/*
+SRC_FILES	:=	$(shell find $(SRC_DIR) -type f -name "*.c")
+OBJ_FILES	:=	$(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(SRC_FILES))
 
-CC				= cc
+## Compiler & Flags
+CC			:=	cc
+CFLAGS		:=	-Wall -Wextra -Werror -I $(INC_DIR)
+AR			:=	ar rcs
+RM			:=	rm -rf
 
-FLAGS			= -Wall -Werror -Wextra
+## Color Codes
+CYAN		:=	\033[0;36m
+GREEN		:=	\033[0;32m
+RED			:=	\033[0;31m
+BLUE		:=	\033[0;34m
+RESET		:=	\033[0m
 
-AR				= ar -rsc
+## Counters
+COMPILED	:=	0
+TOTAL		:=	$(words $(OBJ_FILES))
 
-RM				= rm -f
+## Compile object files with colored progress bar
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
+				@ mkdir -p $(dir $@)
+				@ $(eval COMPILED=$(shell echo $$(($(COMPILED)+1))))
+				@ PERCENT=$$(($(COMPILED)*100/$(TOTAL))); \
+				echo "$(BLUE)[$(COMPILED)/$(TOTAL)] Compiling $< ($$PERCENT%)$(RESET)\r"; \
+				$(CC) $(CFLAGS) -c $< -o $@
 
-all:			$(NAME)
+## Main Targets
+all: 			$(NAME)
 
-$(NAME):		$(OBJECTS)
-				@$(AR) $(NAME) $(OBJECTS)
-
-obj/%.o:src/%.c
-				@$(CC) $(FLAGS) $(HEADERS) -c $< -o $@
+$(NAME): 		$(OBJ_FILES)
+				@ $(AR) $(NAME) $(OBJ_FILES)
+				@ echo "$(GREEN)[OK] $(NAME) built succesfully.$(RESET)"
 
 clean:
-				@$(RM) $(OBJECTS)
+				@ $(RM) $(OBJ_DIR)
+				@ echo "$(CYAN)All $(NAME) object files have been cleaned.$(RESET)"
 
-fclean:			clean
-				@$(RM) $(NAME)
+fclean: 		clean
+				@ $(RM) $(NAME)
+				@ echo "$(CYAN)All $(NAME) executable files have been cleaned.$(RESET)"
 
-re:				fclean all
+re: 			fclean all
 
-.PHONY:			all clean fclean re
+.PHONY: 		all clean fclean re
