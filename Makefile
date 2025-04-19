@@ -6,7 +6,7 @@
 #    By: sklaokli <sklaokli@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/18 19:44:55 by sklaokli          #+#    #+#              #
-#    Updated: 2025/04/19 22:08:37 by sklaokli         ###   ########.fr        #
+#    Updated: 2025/04/19 22:34:04 by sklaokli         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,12 +19,13 @@ INC_DIR		:=	include
 
 FILES		:=	\
 				shell/main.c \
+				shell/utils.c \
 				env/env.c \
 				env/token.c \
-				builtins/cd.c \
-				builtins/echo.c \
-				builtins/env.c \
-				builtins/pwd.c
+				builtins/cd_builtin.c \
+				builtins/env_builtin.c \
+				builtins/echo_builtin.c \
+				builtins/pwd_builtin.c
 
 SRC			:=	$(addprefix $(SRC_DIR)/, $(FILES))
 OBJ			:=	$(addprefix $(OBJ_DIR)/, $(FILES:.c=.o))

@@ -6,7 +6,7 @@
 /*   By: sklaokli <sklaokli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 21:48:01 by sklaokli          #+#    #+#             */
-/*   Updated: 2025/04/19 22:03:17 by sklaokli         ###   ########.fr       */
+/*   Updated: 2025/04/19 22:47:20 by sklaokli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,11 +33,11 @@ void    init_shell(t_shell *shell, char **env)
     shell->cmds = NULL;
     shell->tokens = NULL;
     shell->env = dup_env(env);
-    shell->path = search_env("PATH", shell->env);
-    shell->user = search_env("USER", shell->env);
-    shell->home = search_env("HOME", shell->env);
-    shell->oldpwd = search_env("OLDPWD", shell->env);
-    shell->pwd = search_env("PWD", shell->env);
+    shell->path = search_env(shell->env, "PATH")->value;
+    shell->user = search_env(shell->env, "USER")->value;
+    shell->home = search_env(shell->env, "HOME")->value;
+    shell->oldpwd = search_env(shell->env, "OLDPWD")->value;
+    shell->pwd = search_env(shell->env, "PWD")->value;
 }
 
 char    *parser(t_shell *shell, char *input)

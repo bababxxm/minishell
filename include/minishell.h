@@ -6,7 +6,7 @@
 /*   By: sklaokli <sklaokli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 18:22:50 by sklaokli          #+#    #+#             */
-/*   Updated: 2025/04/19 22:03:45 by sklaokli         ###   ########.fr       */
+/*   Updated: 2025/04/19 22:45:59 by sklaokli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,16 +65,20 @@ char    *parser(t_shell *shell, char *input);
 void    execute_cmds(t_shell *shell, char *input);
 void    exit_shell(t_shell *shell);
 
+// builtins
+int		cd_builtin(t_shell *shell, char **av);
+void	env_builtin(t_env *env);
+
 // utils
 int		ft_strlen_to_c(char *str, char c);
-void	*last_node(void *node);
-void	ft_lstadd_back(void **node, void *new);
 
 // env
+void	del_env(t_env *env, char *key);
 t_env	*new_env(char *key, char equal, char *value);
 char	*dup_var(char *str, char c);
-t_env	*dup_env(char *env[]);
-char	*search_env(char *key, t_env *env);
+t_env	*dup_env(char **env);
+void	set_env(t_env *env, char *key, char *value);
+t_env	*search_env(t_env *env, char *key);
 void	clear_env(t_env *env);
 
 // token
