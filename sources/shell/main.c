@@ -17,6 +17,7 @@ int	main(int argc, char *argv[], char **env)
 	t_shell	shell;
 
 	init_shell(&shell, env);
+
 	while (true)
 	{
 		shell.input = readline(PROMPT);

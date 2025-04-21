@@ -60,26 +60,29 @@ typedef struct s_shell
 }	t_shell;
 
 // main
-void    init_shell(t_shell *shell, char **env);
-char    *parser(t_shell *shell, char *input);
-void    execute_cmds(t_shell *shell, char *input);
 void    exit_shell(t_shell *shell);
+void    init_shell(t_shell *shell, char **env);
+void    execute_cmds(t_shell *shell, char *input);
+char    *parser(t_shell *shell, char *input);
 
 // builtins
-int		cd_builtin(t_shell *shell, char **av);
-void	env_builtin(t_env *env);
+int		ft_env(t_env *env);
+int		ft_echo(char **av);
+int		ft_pwd(t_shell *shell);
+int		ft_unset(t_env *env, char *key);
+int		ft_cd(t_shell *shell, char **av);
 
 // utils
 int		ft_strlen_to_c(char *str, char c);
 
 // env
+void	clear_env(t_env *env);
 void	del_env(t_env *env, char *key);
-t_env	*new_env(char *key, char equal, char *value);
+void	set_env(t_env *env, char *key, char *value);
 char	*dup_var(char *str, char c);
 t_env	*dup_env(char **env);
-void	set_env(t_env *env, char *key, char *value);
 t_env	*search_env(t_env *env, char *key);
-void	clear_env(t_env *env);
+t_env	*new_env(char *key, char equal, char *value);
 
 // token
 t_token	*get_tokens(char *input);

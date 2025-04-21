@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-int	export_builtin()
+int	ft_export()
 {
 	
 }

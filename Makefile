@@ -22,10 +22,11 @@ FILES		:=	\
 				shell/utils.c \
 				env/env.c \
 				env/token.c \
-				builtins/cd_builtin.c \
-				builtins/env_builtin.c \
-				builtins/echo_builtin.c \
-				builtins/pwd_builtin.c
+				builtins/cd.c \
+				builtins/env.c \
+				builtins/echo.c \
+				builtins/pwd.c \
+				builtins/unset.c
 
 SRC			:=	$(addprefix $(SRC_DIR)/, $(FILES))
 OBJ			:=	$(addprefix $(OBJ_DIR)/, $(FILES:.c=.o))

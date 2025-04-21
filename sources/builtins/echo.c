@@ -32,7 +32,7 @@ void	echo_string(char *str, bool n_flag, bool has_next)
 		printf("\n");
 }
 
-int	echo_builtin(char **av)
+int	ft_echo(char **av)
 {
 	bool	has_next;
 	bool	n_flag;

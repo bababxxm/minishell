@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-int	pwd_builtin(t_shell *shell)
+int	ft_pwd(t_shell *shell)
 {
 	if (shell->pwd)
 	{

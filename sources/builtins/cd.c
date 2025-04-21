@@ -25,7 +25,7 @@ static bool	change_dir(t_shell *shell, char *path)
 	return (true);
 }
 
-int	cd_builtin(t_shell *shell, char **av)
+int	ft_cd(t_shell *shell, char **av)
 {
 	char	*path;
 	

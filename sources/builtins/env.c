@@ -1,7 +1,9 @@
 #include "minishell.h"
 
-void	env_builtin(t_env *env)
+int	ft_env(t_env *env)
 {
+	if (!env)
+		return (EXIT_FAILURE);
 	while (env)
 	{
 		if (env->key)
@@ -13,4 +15,5 @@ void	env_builtin(t_env *env)
 		printf("\n");
 		env = env->next;
 	}
+	return (EXIT_SUCCESS);
 }
