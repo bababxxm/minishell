@@ -17,16 +17,26 @@ int	main(int argc, char *argv[], char **env)
 	t_shell	shell;
 
 	init_shell(&shell, env);
+	// ft_export(shell.env, av);
+	printf(GREEN"--------------------------------------------------\n"RESET);
+	// ft_export(shell.env, (char *[]){"export", NULL});
+	ft_env(shell.env);
+	// ft_export(shell.env, (char *[]){"export", NULL});
+	// printf(GREEN"--------------------------------------------------\n"RESET);
+	// char *ar[] = {"export", " D", "A", "B=", "C", NULL};
+	// ft_export(shell.env, ar);
+	// printf(GREEN"--------------------------------------------------\n"RESET);
+	// ft_export(shell.env, (char *[]){"export", NULL});
 
-	while (true)
-	{
-		shell.input = readline(PROMPT);
-		if (!shell.input)
-			exit_shell(&shell);
-		execute_cmds(&shell, shell.input);
-		add_history(shell.input);
-		free(shell.input);
-	}
+	// while (true)
+	// {
+	// 	shell.input = readline(PROMPT);
+	// 	if (!shell.input)
+	// 		exit_shell(&shell);
+	// 	execute_cmds(&shell, shell.input);
+	// 	add_history(shell.input);
+	// 	free(shell.input);
+	// }
 }
 
 void    init_shell(t_shell *shell, char **env)
@@ -39,6 +49,12 @@ void    init_shell(t_shell *shell, char **env)
     shell->home = search_env(shell->env, "HOME")->value;
     shell->oldpwd = search_env(shell->env, "OLDPWD")->value;
     shell->pwd = search_env(shell->env, "PWD")->value;
+    // shell->env = NULL;
+    // shell->path = NULL;
+    // shell->user = NULL;
+    // shell->home = NULL;
+    // shell->oldpwd = NULL; 
+    // shell->pwd = NULL;
 }
 
 char    *parser(t_shell *shell, char *input)

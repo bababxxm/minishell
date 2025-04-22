@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-bool	is_n_flag(char *str)
+static bool	is_n_flag(char *str)
 {
 	int	i;
 
@@ -17,7 +17,7 @@ bool	is_n_flag(char *str)
 	return (true);
 }
 
-void	echo_string(char *str, bool n_flag, bool has_next)
+static void	echo_string(char *str, bool n_flag, bool has_next)
 {
 	int	i;
 

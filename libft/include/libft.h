@@ -22,6 +22,7 @@ typedef struct s_list
 	void			*content;
 }	t_list;
 
+int		ft_isspace(int c);
 int		ft_isalpha(int c);
 int		ft_isdigit(int c);
 int		ft_isascii(int c);

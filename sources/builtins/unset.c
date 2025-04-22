@@ -1,9 +1,11 @@
 #include "minishell.h"
 
-int	ft_unset(t_env *env, char *key)
+int	ft_unset(t_env **env, char **av)
 {
-	if (!key)
-		return (EXIT_FAILURE);
-	del_env(env, key);
+	int	i;
+
+	i = 0;
+	while (av[++i])
+		del_env(env, av[i]);
 	return (EXIT_SUCCESS);
 }

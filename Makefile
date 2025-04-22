@@ -26,7 +26,8 @@ FILES		:=	\
 				builtins/env.c \
 				builtins/echo.c \
 				builtins/pwd.c \
-				builtins/unset.c
+				builtins/unset.c \
+				builtins/export.c
 
 SRC			:=	$(addprefix $(SRC_DIR)/, $(FILES))
 OBJ			:=	$(addprefix $(OBJ_DIR)/, $(FILES:.c=.o))
