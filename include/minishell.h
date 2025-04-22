@@ -71,7 +71,7 @@ int		ft_echo(char **av);
 int		ft_pwd(t_shell *shell);
 int		ft_unset(t_env **env, char **av);
 int		ft_cd(t_shell *shell, char **av);
-int		ft_export(t_env *env, char **av);
+int		ft_export(t_env **env, char **av);
 
 // utils
 int		ft_strlen_to_c(char *str, char c);
@@ -79,7 +79,7 @@ int		ft_strlen_to_c(char *str, char c);
 // env
 void	clear_env(t_env *env);
 void	del_env(t_env **env, char *key);
-void	set_env(t_env *env, char *key, char *value);
+void	set_env(t_env **env, char *key, char *value);
 char	*dup_var(char *str, char c);
 t_env	*dup_env(char **env);
 t_env	*search_env(t_env *env, char *key);

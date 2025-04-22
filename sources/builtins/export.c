@@ -23,7 +23,7 @@ static bool	is_valid_input(char *str, bool *has_equal)
 	return (true);
 }
 
-static	void	handle_export(t_env *env, char *key, char *value, bool has_equal)
+static	void	handle_export(t_env **env, char *key, char *value, bool has_equal)
 {
 	t_env	*tmp;
 
@@ -32,10 +32,10 @@ static	void	handle_export(t_env *env, char *key, char *value, bool has_equal)
 		set_env(env, key, value);
 	else
 	{
-		if (search_env(env, key))
+		if (search_env(*env, key))
 			return ;
 		set_env(env, key, NULL);
-		tmp = search_env(env, key);
+		tmp = search_env(*env, key);
 		tmp->equal = '\0';
 	}
 }
@@ -60,7 +60,7 @@ static void	print_export(t_env *env)
 	}
 }
 
-int	ft_export(t_env *env, char **av)
+int	ft_export(t_env **env, char **av)
 {
 	int		i;
 	char	**tmp;
@@ -85,7 +85,7 @@ int	ft_export(t_env *env, char **av)
 	}
 	else
 	{
-		print_export(env);
+		print_export(*env);
 	}
 	return (EXIT_SUCCESS);
 }

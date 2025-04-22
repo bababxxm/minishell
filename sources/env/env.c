@@ -41,16 +41,15 @@ char	*dup_var(char *str, char c)
  	return (var);
 }
  
-void	set_env(t_env *env, char *key, char *value)
+void	set_env(t_env **env, char *key, char *value)
 {
  	t_env	*set;
  
- 	set = search_env(env, key);
+ 	set = search_env(*env, key);
  	if (!set)
  	{
  		set = new_env(ft_strdup(key), '=' ,ft_strdup(value));
-		printf("%s\n", set->value);
- 		ft_lstadd_back((void **)&env, set);
+ 		ft_lstadd_back((void **)env, set);
  	}
  	else
 	{
