@@ -32,17 +32,14 @@ int	ft_cd(t_shell *shell, char **av)
 	if (av[2])
 	{
 		//print Too many argurment.
-		printf(GREEN"in1\n"RESET);
 		return (EXIT_FAILURE);
 	}
 	else if (!av[1] || !ft_strncmp(av[1], "~", 1) || !ft_strncmp(av[1], "--", 2))
 	{
-		printf(GREEN"in2\n"RESET);
 		return (!change_dir(shell, shell->home));
 	}
 	else if (av[1] && !ft_strncmp(av[1], "-", 1))
 	{
-		printf(GREEN"in3\n"RESET);
 		ft_putendl_fd(shell->oldpwd, STDOUT_FILENO);
 		return (!change_dir(shell, shell->oldpwd));
 	}

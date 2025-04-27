@@ -53,7 +53,7 @@ void	set_env(t_env **env, char *key, char *value)
 	}
 	else
 	{
-		free(set->value);
+		free_ptr(set->value);
 		set->equal = '=';
 		set->value = ft_strdup(value);
 	}
@@ -61,11 +61,9 @@ void	set_env(t_env **env, char *key, char *value)
 
 static void	del_env_util(t_env *cur)
 {
-	if (cur->key)
-		free(cur->key);
-	if (cur->value)
-		free(cur->value);
-	free(cur);
+	free_ptr(cur->key);
+	free_ptr(cur->value);
+	free_ptr(cur);
 
 }
 
@@ -141,12 +139,10 @@ void	clear_env(t_shell *shell)
  	{
  		tmp = env;
  		env = env->next;
- 		if (tmp->key)
- 			free(tmp->key);
- 		if (tmp->value)
- 			free(tmp->value);
- 		free(tmp);
+		free_ptr(tmp->key);
+		free_ptr(tmp->value);
+ 		free_ptr(tmp);
  	}
-	free(shell->sort_key);
+	free_ptr(shell->sort_key);
 }
  

@@ -4,7 +4,8 @@ static bool	is_valid_input(int i, char *str, bool *equal_and_plus)
 {
 	if (!str || !ft_isalpha(str[0]))
 	{
-		printf("bash: export: `%s': not a valid identifier\n", str);
+		error_msg("export", str, "not a valid identifier", EXIT_FAILURE);
+		printf("minishell: export: `%s': not a valid identifier\n", str);
 		return (false);
 	}
 	while (str[++i])
@@ -22,7 +23,7 @@ static bool	is_valid_input(int i, char *str, bool *equal_and_plus)
 					equal_and_plus[0] = true;
 				break ;
 			}	
-			printf("bash: export: `%s': not a valid identifier\n", str);
+			printf("minishell: export: `%s': not a valid identifier\n", str);
 			return (false);
 		}
 	}
@@ -40,7 +41,7 @@ static void append_export(t_env **env, t_env *tmp, char *new_key, char *value)
 		else
 			new_value = ft_strdup(value);
 		set_env(env, new_key, new_value);
-		free(new_value);
+		free_ptr(new_value);
 	}
 	else
 		set_env(env, new_key, value);
@@ -68,7 +69,7 @@ static void	handle_export(t_env **env, char *key, char *value, bool equal_and_pl
 		tmp->equal = '\0';
 	}
 	if (equal_and_plus[1])
-		free(new_key);
+		free_ptr(new_key);
 }
 
 void	print_export(t_shell *shell)

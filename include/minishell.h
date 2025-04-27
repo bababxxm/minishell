@@ -73,7 +73,9 @@ int		ft_pwd(t_shell *shell);
 int		ft_unset(t_env **env, char **av);
 int		ft_cd(t_shell *shell, char **av);
 int		ft_export(t_shell *shell, char **av);
+
 // memory
+void	free_ptr(void *ptr);
 void	free_arg(char **data);
 
 // utils
@@ -90,6 +92,9 @@ char	*dup_var(char *str, char c);
 t_env	*dup_env(char **env);
 t_env	*search_env(t_env *env, char *key);
 t_env	*new_env(char *key, char equal, char *value);
+
+//error_msg
+int	errmsg_cmd(char *cmd, char *detail, char *err_msg, int err_nb);
 
 // token
 t_token	*get_tokens(char *input);

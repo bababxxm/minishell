@@ -22,15 +22,3 @@ int	ft_strlen_to_c(char *str, char c)
 	return (len);
 }
 
-void	*safe_malloc(size_t	size)
-{
-	void	*ptr;
-
-	ptr = malloc(size);
-	if (!ptr)
-	{
-		perror("Error: Memory allocation failed!\n");
-		return (NULL);
-	}
-	return (ptr);
-}
