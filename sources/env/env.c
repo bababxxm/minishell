@@ -46,14 +46,15 @@ void	set_env(t_env **env, char *key, char *value)
  	t_env	*set;
  
  	set = search_env(*env, key);
- 	if (!set)
- 	{
- 		set = new_env(ft_strdup(key), '=' ,ft_strdup(value));
- 		ft_lstadd_back((void **)env, set);
- 	}
- 	else
+	if (!set)
+	{
+		set = new_env(ft_strdup(key), '=' ,ft_strdup(value));
+		ft_lstadd_back((void **)env, set);
+	}
+	else
 	{
 		free(set->value);
+		set->equal = '=';
 		set->value = ft_strdup(value);
 	}
 }

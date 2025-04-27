@@ -73,7 +73,12 @@ int		ft_unset(t_env **env, char **av);
 int		ft_cd(t_shell *shell, char **av);
 int		ft_export(t_env **env, char **av);
 
+// memory
+void	free_arg(char **data);
+
 // utils
+void	print_export(t_env *env);
+char	*handle_key(char *str, bool equal_and_plus[]);
 int		ft_strlen_to_c(char *str, char c);
 
 // env

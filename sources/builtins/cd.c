@@ -12,8 +12,8 @@ static void	update_path(t_shell *shell)
 	else
 		shell->oldpwd = shell->pwd;
 	shell->pwd = cur_path;
-	set_env(shell->env, "PWD", shell->pwd);
-	set_env(shell->env, "OLDPWD", shell->oldpwd);
+	set_env(&shell->env, "PWD", shell->pwd);
+	set_env(&shell->env, "OLDPWD", shell->oldpwd);
 }
 
 static bool	change_dir(t_shell *shell, char *path)
