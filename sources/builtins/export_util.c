@@ -1,5 +1,14 @@
 #include "minishell.h"
 
+void	set_bool(bool *data, bool op)
+{
+	int	i;
+
+	i = -1;
+	while (data[++i])
+		data[i] = op;
+}
+
 char	*handle_key(char *str, bool equal_and_plus[])
 {
 	if (equal_and_plus[1])

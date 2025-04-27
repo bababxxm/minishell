@@ -5,7 +5,6 @@ static bool	is_valid_input(int i, char *str, bool *equal_and_plus)
 	if (!str || !ft_isalpha(str[0]))
 	{
 		error_msg("export", str, "not a valid identifier", EXIT_FAILURE);
-		printf("minishell: export: `%s': not a valid identifier\n", str);
 		return (false);
 	}
 	while (str[++i])
@@ -15,10 +14,7 @@ static bool	is_valid_input(int i, char *str, bool *equal_and_plus)
 			if (str[i] == '+' || str[i] == '=')
 			{
 				if (str[i + 1] && str[i] == '+' && str[i + 1] == '=')
-				{
-					equal_and_plus[0] = true;
-					equal_and_plus[1] = true;
-				}
+					set_bool(equal_and_plus, true);
 				if (str[i] == '=')
 					equal_and_plus[0] = true;
 				break ;
@@ -100,15 +96,14 @@ void	print_export(t_shell *shell)
 int	ft_export(t_shell *shell, char **av)
 {
 	int		i;
+	int		ret;
 	char	**tmp;
 	bool	equal_and_plus[2];
 
 	i = 0;
-	tmp = NULL;
-	equal_and_plus[0] = false;
-	equal_and_plus[1] = false;
+	ret = EXIT_SUCCESS;
+	set_bool(&equal_and_plus, false);
 	if (av[1])
-	{
 		while (av[++i])
 		{
 			if (is_valid_input(-1, av[i], equal_and_plus))
@@ -117,11 +112,11 @@ int	ft_export(t_shell *shell, char **av)
 				handle_export(&shell->env, tmp[0], tmp[1], equal_and_plus);
 				free_arg(tmp);
 			}
-			equal_and_plus[0] = false;
-			equal_and_plus[1] = false;
+			else
+				ret = EXIT_FAILURE;
+			set_bool(&equal_and_plus, false);
 		}
-	}
 	else
 		print_export(shell);
-	return (EXIT_SUCCESS);
+	return (ret);
 }
