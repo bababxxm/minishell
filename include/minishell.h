@@ -47,6 +47,7 @@ typedef struct s_env
 
 typedef struct s_shell
 {
+	char			**sort_key;
 	char			*input;
 	char			*path;
 	char			*user;
@@ -71,18 +72,18 @@ int		ft_echo(char **av);
 int		ft_pwd(t_shell *shell);
 int		ft_unset(t_env **env, char **av);
 int		ft_cd(t_shell *shell, char **av);
-int		ft_export(t_env **env, char **av);
-
+int		ft_export(t_shell *shell, char **av);
 // memory
 void	free_arg(char **data);
 
 // utils
-void	print_export(t_env *env);
+void	*safe_malloc(size_t	size);
 char	*handle_key(char *str, bool equal_and_plus[]);
+char	**create_list_key(t_env *env);
 int		ft_strlen_to_c(char *str, char c);
 
 // env
-void	clear_env(t_env *env);
+void	clear_env(t_shell *shell);
 void	del_env(t_env **env, char *key);
 void	set_env(t_env **env, char *key, char *value);
 char	*dup_var(char *str, char c);

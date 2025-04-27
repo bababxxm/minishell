@@ -71,7 +71,32 @@ static void	handle_export(t_env **env, char *key, char *value, bool equal_and_pl
 		free(new_key);
 }
 
-int	ft_export(t_env **env, char **av)
+void	print_export(t_shell *shell)
+{
+	t_env	*tmp;
+	int		i;
+
+	i = 0;
+	while (shell->sort_key[i])
+	{
+		tmp = search_env(shell->env, shell->sort_key[i]);
+		if (tmp->key)
+			printf("declare -x %s", tmp->key);
+		if (tmp->equal)
+		{
+			printf("=");
+			if (tmp->value)
+				printf("\"%s\"", tmp->value);
+			else
+				printf("\"\"");
+
+		}
+		printf("\n");
+		i++;
+	}
+}
+
+int	ft_export(t_shell *shell, char **av)
 {
 	int		i;
 	char	**tmp;
@@ -88,7 +113,7 @@ int	ft_export(t_env **env, char **av)
 			if (is_valid_input(-1, av[i], equal_and_plus))
 			{
 				tmp = ft_split(av[i], '=');
-				handle_export(env, tmp[0], tmp[1], equal_and_plus);
+				handle_export(&shell->env, tmp[0], tmp[1], equal_and_plus);
 				free_arg(tmp);
 			}
 			equal_and_plus[0] = false;
@@ -96,6 +121,6 @@ int	ft_export(t_env **env, char **av)
 		}
 	}
 	else
-		print_export(*env);
+		print_export(shell);
 	return (EXIT_SUCCESS);
 }

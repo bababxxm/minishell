@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: sklaokli <sklaokli@student.42.fr>          +#+  +:+       +#+         #
+#    By: pkhienko <pkhienko@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2025/04/19 21:00:46 by sklaokli          #+#    #+#              #
-#    Updated: 2025/04/19 21:04:54 by sklaokli         ###   ########.fr        #
+#    Created: 2025/04/19 21:00:46 by pkhienko          #+#    #+#              #
+#    Updated: 2025/04/19 21:04:54 by pkhienko         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 

@@ -16,7 +16,7 @@ t_env	*new_env(char *key, char equal, char *value)
 {
  	t_env	*new;
  
- 	new = malloc(sizeof(t_env));
+ 	new = safe_malloc(sizeof(t_env));
  	if (!new)
  		return (NULL);
  	new->key = key;
@@ -31,7 +31,7 @@ char	*dup_var(char *str, char c)
  	int		i;
  	char	*var;
  	
- 	var = malloc(sizeof(char) * (ft_strlen_to_c(str, c) + 1));
+ 	var = safe_malloc(sizeof(char) * (ft_strlen_to_c(str, c) + 1));
  	if (!var)
  		return (NULL);
  	i = 0;
@@ -131,10 +131,12 @@ t_env	*search_env(t_env *env, char *key)
  	return (NULL);
 }
  
-void	clear_env(t_env *env)
+void	clear_env(t_shell *shell)
 {
  	t_env	*tmp;
+	t_env	*env;
  
+	env = shell->env;
  	while (env)
  	{
  		tmp = env;
@@ -145,5 +147,6 @@ void	clear_env(t_env *env)
  			free(tmp->value);
  		free(tmp);
  	}
+	free(shell->sort_key);
 }
  

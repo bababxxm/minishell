@@ -16,7 +16,7 @@ t_token	*new_token(char *argv, t_token_type tk_type, t_quote_type qt_type)
 {
 	t_token	*new;
 
-	new = malloc(sizeof(t_token));
+	new = safe_malloc(sizeof(t_token));
 	if (!new)
 		return (NULL);
 	new->argv = argv;
