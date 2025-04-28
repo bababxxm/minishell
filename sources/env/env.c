@@ -11,44 +11,44 @@
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
- 
+
 t_env	*new_env(char *key, char equal, char *value)
 {
- 	t_env	*new;
- 
- 	new = safe_malloc(sizeof(t_env));
- 	if (!new)
- 		return (NULL);
- 	new->key = key;
- 	new->equal = equal;
- 	new->value = value;
- 	new->next = NULL;
- 	return (new);
+	t_env	*new;
+
+	new = safe_malloc(sizeof(t_env));
+	if (!new)
+		return (NULL);
+	new->key = key;
+	new->equal = equal;
+	new->value = value;
+	new->next = NULL;
+	return (new);
 }
- 
+
 char	*dup_var(char *str, char c)
 {
- 	int		i;
- 	char	*var;
- 	
- 	var = safe_malloc(sizeof(char) * (ft_strlen_to_c(str, c) + 1));
- 	if (!var)
- 		return (NULL);
- 	i = 0;
- 	while (*str && *str != c)
- 		var[i++] = *str++;
- 	var[i] = '\0';
- 	return (var);
+	int		i;
+	char	*var;
+
+	var = safe_malloc(sizeof(char) * (ft_strlen_to_c(str, c) + 1));
+	if (!var)
+		return (NULL);
+	i = 0;
+	while (*str && *str != c)
+		var[i++] = *str++;
+	var[i] = '\0';
+	return (var);
 }
- 
+
 void	set_env(t_env **env, char *key, char *value)
 {
- 	t_env	*set;
- 
- 	set = search_env(*env, key);
+	t_env	*set;
+
+	set = search_env(*env, key);
 	if (!set)
 	{
-		set = new_env(ft_strdup(key), '=' ,ft_strdup(value));
+		set = new_env(ft_strdup(key), '=', ft_strdup(value));
 		ft_lstadd_back((void **)env, set);
 	}
 	else
@@ -64,7 +64,6 @@ static void	del_env_util(t_env *cur)
 	free_ptr(cur->key);
 	free_ptr(cur->value);
 	free_ptr(cur);
-
 }
 
 void	del_env(t_env **env, char *key)
@@ -72,13 +71,14 @@ void	del_env(t_env **env, char *key)
 	t_env	*prev;
 	t_env	*cur;
 
-	cur	= *env;
+	cur = *env;
 	prev = NULL;
 	if (!env || !*env || !key)
 		return ;
 	while (cur)
 	{
-		if (!ft_strncmp(cur->key, key, ft_strlen(cur->key)) && (ft_strlen(cur->key) == ft_strlen(key)))
+		if (!ft_strncmp(cur->key, key, ft_strlen(cur->key))
+			&& (ft_strlen(cur->key) == ft_strlen(key)))
 		{
 			if (prev && cur->next)
 				prev->next = cur->next;
@@ -96,53 +96,53 @@ void	del_env(t_env **env, char *key)
 
 t_env	*dup_env(char **env)
 {
- 	int		i;
- 	int		j;
- 	char	*key;
- 	char	*value;
- 	t_env	*dup;
- 
- 	i = -1;
- 	j = 0;
- 	dup = NULL;
- 	while (env[++i])
- 	{
- 		j = 0;
- 		key = dup_var(&env[i][j], '=');
- 		while (env[i][j] && env[i][j] != '=')
- 			j++;
- 		j++;
- 		value = dup_var(&env[i][j], '\0');
- 		ft_lstadd_back((void **)&dup, new_env(key, '=', value));
- 	}
- 	return (dup);
+	int		i;
+	int		j;
+	char	*key;
+	char	*value;
+	t_env	*dup;
+
+	i = -1;
+	j = 0;
+	dup = NULL;
+	while (env[++i])
+	{
+		j = 0;
+		key = dup_var(&env[i][j], '=');
+		while (env[i][j] && env[i][j] != '=')
+			j++;
+		j++;
+		value = dup_var(&env[i][j], '\0');
+		ft_lstadd_back((void **)&dup, new_env(key, '=', value));
+	}
+	return (dup);
 }
- 
+
 t_env	*search_env(t_env *env, char *key)
 {
- 	while (env)
- 	{
- 		if (!ft_strncmp(key, env->key, ft_strlen(env->key)))
- 			return (env);
- 		env = env->next;
- 	}
- 	return (NULL);
+	while (env)
+	{
+		if (!ft_strncmp(key, env->key, ft_strlen(env->key))
+			&& ft_strlen(key) == ft_strlen(env->key))
+			return (env);
+		env = env->next;
+	}
+	return (NULL);
 }
- 
+
 void	clear_env(t_shell *shell)
 {
- 	t_env	*tmp;
+	t_env	*tmp;
 	t_env	*env;
- 
+
 	env = shell->env;
- 	while (env)
- 	{
- 		tmp = env;
- 		env = env->next;
+	while (env)
+	{
+		tmp = env;
+		env = env->next;
 		free_ptr(tmp->key);
 		free_ptr(tmp->value);
- 		free_ptr(tmp);
- 	}
+		free_ptr(tmp);
+	}
 	free_ptr(shell->sort_key);
 }
- 

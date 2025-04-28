@@ -1,20 +1,5 @@
 #include "minishell.h"
 
-static char	*safe_strjoin(char *str, char *append)
-{
-	char *tmp;
-
-	if (!str || !append)
-		return (NULL);
-	if (!str)
-		return (ft_strdup(append));
-	if (!append)
-		return (str);
-	tmp = ft_strjoin(str, append);
-	free(str);
-	return (tmp);
-}
-
 static bool	is_export(char *cmd)
 {
 	if (!ft_strncmp(cmd, "export", 6))
@@ -47,5 +32,5 @@ int	errmsg_cmd(char *cmd, char *detail, char *err_msg, int err_nb)
 		msg = safe_strjoin(msg, err_msg);
 	ft_putendl_fd(msg, STDERR_FILENO);
 	free_ptr(msg);
-	return (err_msg);
+	return (err_nb);
 }

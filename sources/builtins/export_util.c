@@ -2,11 +2,8 @@
 
 void	set_bool(bool *data, bool op)
 {
-	int	i;
-
-	i = -1;
-	while (data[++i])
-		data[i] = op;
+	data[0] = op;
+	data[1] = op;
 }
 
 char	*handle_key(char *str, bool equal_and_plus[])
@@ -22,7 +19,7 @@ static void	sort_key(char **keys)
 	int		j;
 	char	*tmp;
 
-	if (!keys)
+	if (!keys || !*keys)
 		return ;
 	i = 0;
 	while (keys[i])
@@ -30,7 +27,7 @@ static void	sort_key(char **keys)
 		j = i + 1;
 		while (keys[j])
 		{
-			if (ft_strcmp(keys[i], keys[j]) > 0)
+			if (ft_strncmp(keys[i], keys[j], ft_strlen(keys[i])) > 0)
 			{
 				tmp = keys[i];
 				keys[i] = keys[j];
@@ -42,7 +39,7 @@ static void	sort_key(char **keys)
 	}
 }
 
-char	**create_list_key(t_env *env)
+char	**update_list_key(t_env *env)
 {
 	char	**list;
 	t_env	*tmp;
@@ -68,4 +65,28 @@ char	**create_list_key(t_env *env)
 	list[size] = NULL;
 	sort_key(list);
 	return (list);
+}
+
+void	print_export(t_shell *shell)
+{
+	t_env	*tmp;
+	int		i;
+
+	i = 0;
+	while (shell->sort_key[i])
+	{
+		tmp = search_env(shell->env, shell->sort_key[i]);
+		if (tmp->key)
+			printf("declare -x %s", tmp->key);
+		if (tmp->equal)
+		{
+			printf("=");
+			if (tmp->value)
+				printf("\"%s\"", tmp->value);
+			else
+				printf("\"\"");
+		}
+		printf("\n");
+		i++;
+	}
 }

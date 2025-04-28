@@ -22,3 +22,30 @@ int	ft_strlen_to_c(char *str, char c)
 	return (len);
 }
 
+char	*safe_strjoin(char *str, char *append)
+{
+	char	*tmp;
+
+	if (!str || !append)
+		return (NULL);
+	if (!str)
+		return (ft_strdup(append));
+	if (!append)
+		return (str);
+	tmp = ft_strjoin(str, append);
+	free(str);
+	return (tmp);
+}
+
+void	*safe_malloc(size_t	size)
+{
+	void	*ptr;
+
+	ptr = malloc(size);
+	if (!ptr)
+	{
+		perror("Malloc failed");
+		return (NULL);
+	}
+	return (ptr);
+}

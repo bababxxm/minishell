@@ -27,11 +27,17 @@
 # include "token.h"
 # include "command.h"
 
+# define B_YELLOW "\033[1;33m"
+# define B_GREEN "\033[1;32m"
+# define B_CYAN "\033[1;36m"
+# define B_RED "\033[0;31m"
+# define YELLOW "\033[0;33m"
 # define GREEN "\033[0;32m"
 # define CYAN "\033[0;36m"
+# define RED "\033[0;31m"
 # define RESET "\033[0m"
 
-# define PROMPT GREEN"➜ "RESET
+# define PROMPT GREEN" ➜ "RESET
 
 # ifndef PATH_MAX
 #  define PATH_MAX 4096
@@ -61,7 +67,6 @@ typedef struct s_shell
 }	t_shell;
 
 // main
-void    exit_shell(t_shell *shell);
 void    init_shell(t_shell *shell, char **env);
 void    execute_cmds(t_shell *shell, char *input);
 char    *parser(t_shell *shell, char *input);
@@ -72,6 +77,7 @@ int		ft_echo(char **av);
 int		ft_pwd(t_shell *shell);
 int		ft_unset(t_env **env, char **av);
 int		ft_cd(t_shell *shell, char **av);
+int		ft_exit(t_shell *shell, char **av);
 int		ft_export(t_shell *shell, char **av);
 
 // memory
@@ -79,10 +85,12 @@ void	free_ptr(void *ptr);
 void	free_arg(char **data);
 
 // utils
+void	print_export(t_shell *shell);
 void	*safe_malloc(size_t	size);
 void	set_bool(bool *data, bool op);
+char	*safe_strjoin(char *str, char *append);
 char	*handle_key(char *str, bool equal_and_plus[]);
-char	**create_list_key(t_env *env);
+char	**update_list_key(t_env *env);
 int		ft_strlen_to_c(char *str, char c);
 
 // env

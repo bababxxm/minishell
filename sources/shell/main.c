@@ -21,38 +21,34 @@ int	main(int argc, char *argv[], char **env)
 	{
 		shell.input = readline(PROMPT);
 		if (!shell.input)
-			exit_shell(&shell);
+			ft_exit(&shell, &shell.input);
 		execute_cmds(&shell, shell.input);
 		add_history(shell.input);
-		free(shell.input);
+		free_ptr(shell.input);
 	}
 }
 
-void    init_shell(t_shell *shell, char **env)
-{    
-    shell->cmds = NULL;
-    shell->tokens = NULL;
-    shell->env = dup_env(env);
-    shell->path = search_env(shell->env, "PATH")->value;
-    shell->user = search_env(shell->env, "USER")->value;
-    shell->home = search_env(shell->env, "HOME")->value;
-    shell->oldpwd = search_env(shell->env, "OLDPWD")->value;
-    shell->pwd = search_env(shell->env, "PWD")->value;
-}
-
-char    *parser(t_shell *shell, char *input)
+void	init_shell(t_shell *shell, char **env)
 {
-    return (NULL);
+	shell->exit_code = 0;
+	shell->cmds = NULL;
+	shell->input = NULL;
+	shell->tokens = NULL;
+	shell->env = dup_env(env);
+	shell->pwd = search_env(shell->env, "PWD")->value;
+	shell->path = search_env(shell->env, "PATH")->value;
+	shell->user = search_env(shell->env, "USER")->value;
+	shell->home = search_env(shell->env, "HOME")->value;
+	shell->sort_key = update_list_key(shell->env);
+	shell->oldpwd = search_env(shell->env, "OLDPWD")->value;
 }
 
-void    execute_cmds(t_shell *shell, char *input)
+char	*parser(t_shell *shell, char *input)
+{
+	return (NULL);
+}
+
+void	execute_cmds(t_shell *shell, char *input)
 {
 	return ;
-}
-
-void    exit_shell(t_shell *shell)
-{
-    printf("exit\n");
-    rl_clear_history();
-    exit(EXIT_SUCCESS);
 }

@@ -45,7 +45,7 @@ t_token	*new_token(char *argv, t_token_type tk_type, t_quote_type qt_type)
 
 // t_quote_type	get_quote_type(char *argv)
 // {
-	
+
 // }
 
 // t_token	*get_tokens(char *input)
