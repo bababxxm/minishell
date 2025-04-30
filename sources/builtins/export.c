@@ -41,7 +41,7 @@ static void	append_var(t_env **env, t_env *tmp, char *new_key, char *value)
 		set_env(env, new_key, value);
 }
 
-static void	export_var(t_env **env, char *key, char *value, bool equal_plus[])
+static void	add_var(t_env **env, char *key, char *value, bool equal_plus[])
 {
 	t_env	*tmp;
 	char	*new_key;
@@ -66,7 +66,7 @@ static void	export_var(t_env **env, char *key, char *value, bool equal_plus[])
 		free_ptr(new_key);
 }
 
-static int	add_var(t_shell *shell, char **av, bool *equal_plus)
+static int	export_var(t_shell *shell, char **av, bool *equal_plus)
 {
 	int		i;
 	int		ret;
@@ -79,7 +79,7 @@ static int	add_var(t_shell *shell, char **av, bool *equal_plus)
 		if (is_valid_input(-1, av[i], equal_plus))
 		{
 			tmp = ft_split(av[i], '=');
-			export_var(&shell->env, tmp[0], tmp[1], equal_plus);
+			add_var(&shell->env, tmp[0], tmp[1], equal_plus);
 			free_arg(tmp);
 		}
 		else
@@ -99,7 +99,7 @@ int	ft_export(t_shell *shell, char **av)
 	ret = EXIT_SUCCESS;
 	set_bool(equal_plus, false);
 	if (av[1])
-		ret = add_var(shell, av, equal_plus);
+		ret = export_var(shell, av, equal_plus);
 	else
 		print_export(shell);
 	return (ret);

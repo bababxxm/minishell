@@ -75,7 +75,7 @@ char    *parser(t_shell *shell, char *input);
 int		ft_env(t_env *env);
 int		ft_echo(char **av);
 int		ft_pwd(t_shell *shell);
-int		ft_unset(t_env **env, char **av);
+int		ft_unset(t_shell *shell, char **av);
 int		ft_cd(t_shell *shell, char **av);
 int		ft_exit(t_shell *shell, char **av);
 int		ft_export(t_shell *shell, char **av);

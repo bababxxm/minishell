@@ -17,15 +17,21 @@ int	main(int argc, char *argv[], char **env)
 	t_shell	shell;
 
 	init_shell(&shell, env);
-	while (true)
-	{
-		shell.input = readline(PROMPT);
-		if (!shell.input)
-			ft_exit(&shell, &shell.input);
-		execute_cmds(&shell, shell.input);
-		add_history(shell.input);
-		free_ptr(shell.input);
-	}
+	ft_export(&shell, (char*[]){"export", "l=123", "d21=q", "D21=q", NULL});
+	// ft_export(&shell, (char*[]){"export", NULL});
+	printf(GREEN"----------------------------------\n"RESET);
+	ft_unset(&shell, (char*[]){"unset", "l", "d21", NULL});
+	// ft_export(&shell, (char*[]){"export", NULL});
+	clear_env(&shell);
+	// while (true)
+	// {
+	// 	shell.input = readline(PROMPT);
+	// 	if (!shell.input)
+	// 		ft_exit(&shell, &shell.input);
+	// 	execute_cmds(&shell, shell.input);
+	// 	add_history(shell.input);
+	// 	free_ptr(shell.input);
+	// }
 }
 
 void	init_shell(t_shell *shell, char **env)

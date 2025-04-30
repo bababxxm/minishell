@@ -20,9 +20,24 @@ typedef enum e_cmd_type
 	CMD_COMMAND
 }	t_cmd_type;
 
+typedef struct s_io_fd
+{
+	char	*heredoc;
+	char	*in_file;
+	char	*out_file;
+	int		fd_in;
+	int		fd_out;
+	int		stdin_backup;
+	int		stdout_backup;
+}	t_io_fd;
+
+
 typedef struct s_cmds
 {
 	char			**cmd;
+	char			**arg;
+	int				*pipe_fd;
+	t_io_fd			*io_fd;
 	t_cmd_type		type;
 	struct s_cmds	*left;
 	struct s_cmds	*right;
