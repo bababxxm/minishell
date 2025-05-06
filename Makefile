@@ -21,7 +21,8 @@ FILES		:=	\
 				shell/main.c \
 				env/env.c \
 				env/utils.c \
-				lexer/parser.c \
+				init/init.c \
+				init/built_cmd.c \
 				lexer/tokenizer.c \
 				lexer/syntax.c \
 				lexer/expand.c \
@@ -35,6 +36,7 @@ FILES		:=	\
 				builtins/unset.c \
 				builtins/export.c \
 				builtins/export_util.c \
+				io_file/io_file.c \
 				memory/free_memory.c \
 				memory/clear.c \
 				error_msg/error.c \
