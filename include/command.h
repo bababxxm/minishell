@@ -13,13 +13,6 @@
 #ifndef COMMAND_H
 # define COMMAND_H
 
-typedef enum e_cmd_type
-{
-	CMD_PIPE,
-	CMD_REDIRECT,
-	CMD_COMMAND
-}	t_cmd_type;
-
 typedef struct s_io_fd
 {
 	char	*heredoc;
@@ -34,13 +27,15 @@ typedef struct s_io_fd
 
 typedef struct s_cmds
 {
-	char			**cmd;
+	char			*cmd;
 	char			**arg;
 	int				*pipe_fd;
 	t_io_fd			*io_fd;
-	t_cmd_type		type;
-	struct s_cmds	*left;
-	struct s_cmds	*right;
+	struct s_cmds	*prev;
+	struct s_cmds	*next;
 }	t_cmds;
+
+int		*create_pipe_fd();
+t_cmds	*built_cmd(t_shell *shell, t_token	*token);
 
 #endif

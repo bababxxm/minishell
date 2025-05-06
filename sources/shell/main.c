@@ -16,45 +16,32 @@ int	main(int argc, char *argv[], char **env)
 {
 	t_shell	shell;
 
+	(void)argc;
+	(void)argv;
 	init_shell(&shell, env);
-	ft_export(&shell, (char*[]){"export", "l=123", "d21=q", "D21=q", NULL});
-	// ft_export(&shell, (char*[]){"export", NULL});
-	printf(GREEN"----------------------------------\n"RESET);
-	ft_unset(&shell, (char*[]){"unset", "l", "d21", NULL});
-	// ft_export(&shell, (char*[]){"export", NULL});
-	clear_env(&shell);
-	// while (true)
-	// {
-	// 	shell.input = readline(PROMPT);
-	// 	if (!shell.input)
-	// 		ft_exit(&shell, &shell.input);
-	// 	execute_cmds(&shell, shell.input);
-	// 	add_history(shell.input);
-	// 	free_ptr(shell.input);
-	// }
-}
-
-void	init_shell(t_shell *shell, char **env)
-{
-	shell->exit_code = 0;
-	shell->cmds = NULL;
-	shell->input = NULL;
-	shell->tokens = NULL;
-	shell->env = dup_env(env);
-	shell->pwd = search_env(shell->env, "PWD")->value;
-	shell->path = search_env(shell->env, "PATH")->value;
-	shell->user = search_env(shell->env, "USER")->value;
-	shell->home = search_env(shell->env, "HOME")->value;
-	shell->sort_key = update_list_key(shell->env);
-	shell->oldpwd = search_env(shell->env, "OLDPWD")->value;
-}
-
-char	*parser(t_shell *shell, char *input)
-{
-	return (NULL);
+	while (true)
+	{
+		shell.input = readline(PROMPT);
+		if (!shell.input)
+			exit_shell(&shell);
+		execute_cmds(&shell, shell.input);
+		add_history(shell.input);
+		free_ptr(shell.input);
+	}
 }
 
 void	execute_cmds(t_shell *shell, char *input)
 {
-	return ;
+	char	*line;
+
+	line = ft_strdup(input);
+	shell->token = tokenizer(shell);
+	clear_tokens(shell->token);
+	free_ptr(line);
+}
+
+void	exit_shell(t_shell *shell)
+{
+	clear_shell(shell);
+	exit(shell->exit_code);
 }

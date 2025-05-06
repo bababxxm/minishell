@@ -6,7 +6,7 @@
 #    By: sklaokli <sklaokli@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/18 19:44:55 by sklaokli          #+#    #+#              #
-#    Updated: 2025/04/19 22:34:04 by sklaokli         ###   ########.fr        #
+#    Updated: 2025/05/07 01:30:30 by sklaokli         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,7 +20,13 @@ INC_DIR		:=	include
 FILES		:=	\
 				shell/main.c \
 				env/env.c \
-				env/token.c \
+				env/utils.c \
+				lexer/parser.c \
+				lexer/tokenizer.c \
+				lexer/syntax.c \
+				lexer/expand.c \
+				lexer/subtoken.c \
+				lexer/utils.c \
 				builtins/cd.c \
 				builtins/env.c \
 				builtins/pwd.c \
@@ -30,6 +36,7 @@ FILES		:=	\
 				builtins/export.c \
 				builtins/export_util.c \
 				memory/free_memory.c \
+				memory/clear.c \
 				error_msg/error.c \
 				utils/utils.c
 
@@ -53,6 +60,21 @@ RESET		:=	\033[0m
 TOTAL_FILES	:=	$(words $(OBJ))
 COMPILED	:=	0
 
+SUPPRESS := "\
+{\n\
+\treadline_leak\n\
+\tMemcheck:Leak\n\
+\t...\n\
+\tfun:readline\n\
+}\n\
+{\n\
+\tadd_history_leak\n\
+\tMemcheck:Leak\n\
+\t...\n\
+\tfun:add_history\n\
+}\
+"
+
 all: 			$(NAME)
 
 $(NAME):		$(LIBFT) $(OBJ)
@@ -70,15 +92,19 @@ $(LIBFT):
 				@ $(MAKE) -sC libft
 
 clean:
-				@ $(RM) $(OBJ_DIR)
+				@ $(RM) $(OBJ_DIR) readline.supp
 				@ $(MAKE) -sC libft clean
 				@ echo "$(CYAN)All $(NAME) object files have been cleaned.$(RESET)"
 
 fclean:			clean
-				@ $(RM) $(NAME)
+				@ $(RM) $(NAME) readline.supp
 				@ $(MAKE) -sC libft fclean
 				@ echo "$(CYAN)All $(NAME) executable files have been cleaned.$(RESET)"
 
 re:				fclean all
+
+valgrind:		$(NAME)
+				@ echo $(SUPPRESS) > readline.supp
+				@ valgrind --suppressions=readline.supp --leak-check=full --show-leak-kinds=all ./$(NAME)
 
 .PHONY:			all clean fclean re

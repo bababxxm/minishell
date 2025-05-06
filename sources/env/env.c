@@ -6,7 +6,7 @@
 /*   By: sklaokli <sklaokli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 22:44:48 by sklaokli          #+#    #+#             */
-/*   Updated: 2025/04/19 22:46:25 by sklaokli         ###   ########.fr       */
+/*   Updated: 2025/05/06 21:46:53 by sklaokli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,21 +26,6 @@ t_env	*new_env(char *key, char equal, char *value)
 	return (new);
 }
 
-char	*dup_var(char *str, char c)
-{
-	int		i;
-	char	*var;
-
-	var = safe_malloc(sizeof(char) * (ft_strlen_to_c(str, c) + 1));
-	if (!var)
-		return (NULL);
-	i = 0;
-	while (*str && *str != c)
-		var[i++] = *str++;
-	var[i] = '\0';
-	return (var);
-}
-
 void	set_env(t_env **env, char *key, char *value)
 {
 	t_env	*set;
@@ -57,13 +42,6 @@ void	set_env(t_env **env, char *key, char *value)
 		set->equal = '=';
 		set->value = ft_strdup(value);
 	}
-}
-
-static void	del_env_util(t_env *cur)
-{
-	free_ptr(cur->key);
-	free_ptr(cur->value);
-	free_ptr(cur);
 }
 
 void	del_env(t_env **env, char *key)
@@ -128,21 +106,4 @@ t_env	*search_env(t_env *env, char *key)
 		env = env->next;
 	}
 	return (NULL);
-}
-
-void	clear_env(t_shell *shell)
-{
-	t_env	*tmp;
-	t_env	*env;
-
-	env = shell->env;
-	while (env)
-	{
-		tmp = env;
-		env = env->next;
-		free_ptr(tmp->key);
-		free_ptr(tmp->value);
-		free_ptr(tmp);
-	}
-	free_ptr(shell->sort_key);
 }
