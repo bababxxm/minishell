@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strdup.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pkhienko <pkhienko@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pkhienko42 <pkhienko42@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/31 15:29:59 by pkhienko          #+#    #+#             */
-/*   Updated: 2025/04/19 20:55:13 by pkhienko         ###   ########.fr       */
+/*   Updated: 2025/05/07 23:35:01 by pkhienko42       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ char	*ft_strdup(const char *s)
 	if (!s)
 		return (NULL);
 	i = -1;
-	dest = (char *)malloc(ft_strlen(s) + 1);
+	dest = (char *) safealloc(ft_strlen(s) + 1, sizeof(char));
 	if (!dest)
 		return (NULL);
 	while (s[++i])

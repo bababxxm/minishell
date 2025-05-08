@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sklaokli <sklaokli@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pkhienko42 <pkhienko42@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 18:20:18 by sklaokli          #+#    #+#             */
-/*   Updated: 2025/05/07 00:58:46 by sklaokli         ###   ########.fr       */
+/*   Updated: 2025/05/07 23:50:03 by pkhienko42       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ char	*ft_expand(char *str, int *ptr, t_env *env)
 		expand = ft_strdup("");
 	else
 		expand = ft_strdup(get_value(env, key));
-	free_ptr(key);
+	// free_ptr(key);
 	*ptr = start + len;
 	return (expand);
 }
@@ -76,15 +76,15 @@ char	*cut_invalid_expand(char *str)
 
 	len = ft_strlen(str) - 1;
 	if (len <= 0)
-		return (free_ptr(str), ft_strdup(""));
-	res = safe_malloc(sizeof(char) * (len + 1));
-	if (!res)
-		return (NULL);
+		// return (free_ptr(str), ft_strdup(""));
+		return (ft_strdup(""));
+	res = safealloc(len + 1, sizeof(char));
 	i = -1;
 	while (++i < len)
 		res[i] = str[i];
 	res[i] = '\0';
-	return (free_ptr(str), res);
+	// return (free_ptr(str), res);
+	return (res);
 }
 
 char	*expand_variable(char *str, t_env *env)
@@ -109,5 +109,5 @@ char	*expand_variable(char *str, t_env *env)
 		}
 		join = join_and_free(join, tmp);
 	}
-	return (free_ptr(str), join);
+	return (join);
 }

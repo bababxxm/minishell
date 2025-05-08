@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sklaokli <sklaokli@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pkhienko42 <pkhienko42@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 00:53:38 by sklaokli          #+#    #+#             */
-/*   Updated: 2025/05/07 00:53:39 by sklaokli         ###   ########.fr       */
+/*   Updated: 2025/05/07 23:49:07 by pkhienko42       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,6 @@ static void	append_var(t_env **env, t_env *tmp, char *new_key, char *value)
 		else
 			new_value = ft_strdup(value);
 		set_env(env, new_key, new_value);
-		free_ptr(new_value);
 	}
 	else
 		set_env(env, new_key, value);
@@ -75,7 +74,7 @@ static void	add_var(t_env **env, char *key, char *value, bool equal_plus[])
 		tmp->equal = '\0';
 	}
 	if (equal_plus[1])
-		free_ptr(new_key);
+		new_key = NULL;
 }
 
 static int	export_var(t_shell *shell, char **av, bool *equal_plus)
@@ -92,13 +91,11 @@ static int	export_var(t_shell *shell, char **av, bool *equal_plus)
 		{
 			tmp = ft_split(av[i], '=');
 			add_var(&shell->env, tmp[0], tmp[1], equal_plus);
-			free_arg(tmp);
 		}
 		else
 			ret = EXIT_FAILURE;
 		set_bool(equal_plus, false);
 	}
-	free_ptr(shell->sort_key);
 	shell->sort_key = update_list_key(shell->env);
 	return (ret);
 }

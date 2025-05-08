@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sklaokli <sklaokli@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pkhienko42 <pkhienko42@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 21:48:01 by sklaokli          #+#    #+#             */
-/*   Updated: 2025/04/19 22:47:20 by sklaokli         ###   ########.fr       */
+/*   Updated: 2025/05/08 20:32:56 by pkhienko42       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,24 +24,43 @@ int	main(int argc, char *argv[], char **env)
 		shell.input = readline(PROMPT);
 		if (!shell.input)
 			exit_shell(&shell);
-		execute_cmds(&shell, shell.input);
+		execute_cmds(&shell);
 		add_history(shell.input);
-		free_ptr(shell.input);
+		// t_cmds	*tmp = shell.cmds;
+		// while (tmp)
+		// {
+		// 	int i = -1;
+		// 	printf("cmd= %s\n", tmp->cmd);
+		// 	while (tmp->arg[++i])
+		// 		printf("arg= %s\n", tmp->arg[i]);
+		// 	if (!tmp->pipe_fd)
+		// 		printf("NULL\n");
+		// 	else
+		// 		printf("pipe= %d:%d\n", tmp->pipe_fd[0], tmp->pipe_fd[1]);
+		// 	if (tmp->io_fd->in_file)
+		// 		printf("In file= %s\n", tmp->io_fd->in_file);
+		// 	if (tmp->io_fd->out_file)
+		// 		printf("Out file= %s\n", tmp->io_fd->out_file);
+		// 	if (tmp->io_fd->heredoc)
+		// 		printf("Heredoc= %s\n", tmp->io_fd->heredoc);
+		// 	tmp = tmp->next;
+		// }
 	}
+	exit_shell(&shell);
 }
 
-void	execute_cmds(t_shell *shell, char *input)
+void	execute_cmds(t_shell *shell)
 {
-	char	*line;
-
-	line = ft_strdup(input);
 	shell->token = tokenizer(shell);
-	clear_tokens(shell->token);
-	free_ptr(line);
+	if (!shell->token)
+		return ;
+	// printf("%s\n", shell->cmds->cmd);
+	shell->cmds = built_cmd(shell->token);
+	execute(shell);
 }
 
 void	exit_shell(t_shell *shell)
 {
-	clear_shell(shell);
+	free_safealloc();
 	exit(shell->exit_code);
 }

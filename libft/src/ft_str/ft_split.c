@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pkhienko <pkhienko@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pkhienko42 <pkhienko42@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 22:16:47 by pkhienko          #+#    #+#             */
-/*   Updated: 2025/04/19 20:55:13 by pkhienko         ###   ########.fr       */
+/*   Updated: 2025/05/07 23:34:22 by pkhienko42       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ char	**ft_split(char const *s, char c)
 
 	if (!s)
 		return (NULL);
-	str = (char **)malloc(sizeof(char *) * (issep(s, c) + 1));
+	str = (char **)safealloc(issep(s, c) + 1, sizeof(char *));
 	if (!str)
 		return (NULL);
 	start = 0;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   subtoken.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sklaokli <sklaokli@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pkhienko42 <pkhienko42@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 18:21:08 by sklaokli          #+#    #+#             */
-/*   Updated: 2025/05/07 01:20:12 by sklaokli         ###   ########.fr       */
+/*   Updated: 2025/05/07 23:53:31 by pkhienko42       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void	token_strjoin(t_token **token, t_token *subtoken, int len, int index)
 		add_token(index, NULL, TK_WORD, token);
 		return ;
 	}
-	join = safe_malloc(sizeof(char) * (len + 1));
+	join = safealloc(len + 1, sizeof(char));
 	if (!join)
 		return ;
 	i = 0;
@@ -69,11 +69,9 @@ t_token	*merge_subtokens(t_token *subtoken)
 	int		len;
 	int		index;
 	t_token	*token;
-	t_token	*tmp;
 
 	index = 0;
 	token = NULL;
-	tmp = subtoken;
 	while (subtoken)
 	{
 		while (subtoken && subtoken->index != index)
@@ -83,6 +81,5 @@ t_token	*merge_subtokens(t_token *subtoken)
 		len = token_strlen(subtoken, index);
 		token_strjoin(&token, subtoken, len, index++);
 	}
-	clear_tokens(tmp);
 	return (token);
 }

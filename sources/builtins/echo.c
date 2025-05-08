@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sklaokli <sklaokli@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pkhienko42 <pkhienko42@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 00:53:17 by sklaokli          #+#    #+#             */
-/*   Updated: 2025/05/07 00:53:18 by sklaokli         ###   ########.fr       */
+/*   Updated: 2025/05/07 23:29:55 by pkhienko42       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,6 @@ static bool	is_n_flag(char *str)
 
 static void	echo_string(char *str, bool n_flag, bool has_next)
 {
-	int	i;
-
-	i = -1;
 	if (!str && n_flag)
 		printf("\n");
 	if (str)

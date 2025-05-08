@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sklaokli <sklaokli@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pkhienko42 <pkhienko42@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 02:04:03 by sklaokli          #+#    #+#             */
-/*   Updated: 2025/04/09 04:05:11 by sklaokli         ###   ########.fr       */
+/*   Updated: 2025/05/08 19:31:26 by pkhienko42       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ typedef struct s_io_fd
 	char	*heredoc;
 	char	*in_file;
 	char	*out_file;
+	bool	append;
 	int		fd_in;
 	int		fd_out;
 	int		stdin_backup;
@@ -35,7 +36,15 @@ typedef struct s_cmds
 	struct s_cmds	*next;
 }	t_cmds;
 
+void	backup_io(t_io_fd *io_fd);
+void	restore_io(t_io_fd *io_fd);
+void	redirect_io(t_io_fd *io_fd);
+void	setup_redirect(t_io_fd *io_fd);
+bool	is_builtin(char *cmd);
 int		*create_pipe_fd();
-t_cmds	*built_cmd(t_shell *shell, t_token	*token);
+int		execute(t_shell *shell);
+char	**get_envp(t_env *env);
+char	*search_cmd(char *cmd, t_shell *shell);
+t_cmds	*built_cmd(t_token	*token);
 
 #endif

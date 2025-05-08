@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sklaokli <sklaokli@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pkhienko42 <pkhienko42@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 18:21:06 by sklaokli          #+#    #+#             */
-/*   Updated: 2025/05/06 18:27:08 by sklaokli         ###   ########.fr       */
+/*   Updated: 2025/05/07 23:50:26 by pkhienko42       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,6 @@ char	*join_and_free(char *s1, char *s2)
 	res = ft_strjoin(s1, s2);
 	if (!res)
 		return (NULL);
-	free_ptr(s1);
-	free_ptr(s2);
 	return (res);
 }
 

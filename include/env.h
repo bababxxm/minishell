@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sklaokli <sklaokli@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pkhienko42 <pkhienko42@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 18:42:35 by sklaokli          #+#    #+#             */
-/*   Updated: 2025/05/07 01:21:06 by sklaokli         ###   ########.fr       */
+/*   Updated: 2025/05/07 23:55:19 by pkhienko42       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,5 @@ void	set_env(t_env **env, char *key, char *value);
 t_env	*search_env(t_env *env, char *key);
 char	*get_value(t_env *env, char *key);
 void	del_env(t_env **env, char *key);
-void	del_env_util(t_env *cur);
-void	clear_env(t_env *env, char **sort_key);
 
 #endif

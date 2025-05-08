@@ -64,9 +64,7 @@ char	**update_list_key(t_env *env)
 		tmp = tmp->next;
 		size++;
 	}
-	list = safe_malloc(sizeof(char *) * (size + 1));
-	if (!list)
-		return (NULL);
+	list = safealloc(size + 1, sizeof(char *));
 	size = 0;
 	tmp = env;
 	while (tmp)

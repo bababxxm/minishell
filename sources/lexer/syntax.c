@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   syntax.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sklaokli <sklaokli@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pkhienko42 <pkhienko42@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 18:26:05 by sklaokli          #+#    #+#             */
-/*   Updated: 2025/05/07 01:11:25 by sklaokli         ###   ########.fr       */
+/*   Updated: 2025/05/07 23:52:14 by pkhienko42       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,12 +28,40 @@ int	handle_quotes(int start, t_shell *shell,\
 	quote = shell->input[end++];
 	while (shell->input[end] && shell->input[end] != quote)
 		end++;
-	str = ft_substr(shell->input, start + 1, end - start - 2);
+	if (!shell->input[end])
+		return (end);
+	str = ft_substr(shell->input, start + 1, end - start - 1);
 	if (quote == '\"' && has_expand(str))
 		str = expand_variable(str, shell->env);
 	if (!str)
-		return (add_token(index, str, TK_WORD, token), end);
-	if (str[0] == '-' && str[1])
+		add_token(index, str, TK_WORD, token);
+	else if (str[0] == '-' && str[1])
+		add_token(index, str, TK_OPTION, token);
+	else
+		add_token(index, str, TK_WORD, token);
+	return (end + 1);
+}
+
+int	handle_unquotes(int start, t_shell *shell,\
+	int index, t_token **token)
+{
+	int		end;
+	char	*str;
+
+	end = start;
+	while (shell->input[end] && !ft_isspace(shell->input[end])
+		&& shell->input[end] != '\'' && shell->input[end] != '\"'
+		&& !is_operator(shell->input[end]))
+		end++;
+	str = ft_substr(shell->input, start, end - start);
+	if (has_expand(str))
+		str = expand_variable(str, shell->env);
+	if (shell->input[end - 1] == '$'
+		&& (shell->input[end] == '\'' || shell->input[end] == '\"'))
+		str = cut_invalid_expand(str);
+	if (!str)
+		add_token(index, str, TK_WORD, token);
+	else if (str[0] == '-' && str[1])
 		add_token(index, str, TK_OPTION, token);
 	else
 		add_token(index, str, TK_WORD, token);
@@ -58,30 +86,4 @@ int	handle_operators(int start, t_shell *shell,\
 	else
 		return (add_token(index, ft_substr(shell->input, start, 1),
 				TK_PIPE, token), start + 1);
-}
-
-int	handle_unquotes(int start, t_shell *shell,\
-	int index, t_token **token)
-{
-	int		end;
-	char	*str;
-
-	end = start;
-	while (shell->input[end] && !ft_isspace(shell->input[end])
-		&& shell->input[end] != '\'' && shell->input[end] != '\"'
-		&& !is_operator(shell->input[end]))
-		end++;
-	str = ft_substr(shell->input, start, end - start);
-	if (has_expand(str))
-		str = expand_variable(str, shell->env);
-	if (shell->input[end - 1] == '$'
-		&& (shell->input[end] == '\'' || shell->input[end] == '\"'))
-		str = cut_invalid_expand(str);
-	if (!str)
-		return (add_token(index, str, TK_WORD, token), end);
-	if (str[0] == '-' && str[1])
-		add_token(index, str, TK_OPTION, token);
-	else
-		add_token(index, str, TK_WORD, token);
-	return (end);
 }

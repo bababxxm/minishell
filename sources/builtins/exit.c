@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sklaokli <sklaokli@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pkhienko42 <pkhienko42@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 00:53:24 by sklaokli          #+#    #+#             */
-/*   Updated: 2025/05/07 00:53:26 by sklaokli         ###   ########.fr       */
+/*   Updated: 2025/05/07 23:48:58 by pkhienko42       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,10 @@ int	ft_exit(t_shell *shell, char **av)
 {
 	int	err_nb;
 
+	(void)shell;
 	err_nb = ft_atoi(av[1]);
 	printf("exit\n");
 	rl_clear_history();
-	clear_env(shell->env, shell->sort_key);
 	if (av[1])
 	{
 		if (av[2])

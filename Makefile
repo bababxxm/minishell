@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: sklaokli <sklaokli@student.42.fr>          +#+  +:+       +#+         #
+#    By: pkhienko42 <pkhienko42@student.42.fr>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/18 19:44:55 by sklaokli          #+#    #+#              #
-#    Updated: 2025/05/07 01:30:30 by sklaokli         ###   ########.fr        #
+#    Updated: 2025/05/08 18:05:47 by pkhienko42       ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,6 +28,7 @@ FILES		:=	\
 				lexer/expand.c \
 				lexer/subtoken.c \
 				lexer/utils.c \
+				lexer/parser.c \
 				builtins/cd.c \
 				builtins/env.c \
 				builtins/pwd.c \
@@ -36,11 +37,12 @@ FILES		:=	\
 				builtins/unset.c \
 				builtins/export.c \
 				builtins/export_util.c \
+				executor/execution.c \
+				executor/execution_util.c \
 				io_file/io_file.c \
-				memory/free_memory.c \
-				memory/clear.c \
 				error_msg/error.c \
 				utils/utils.c
+
 
 SRC			:=	$(addprefix $(SRC_DIR)/, $(FILES))
 OBJ			:=	$(addprefix $(OBJ_DIR)/, $(FILES:.c=.o))
@@ -49,8 +51,9 @@ INC			:=	-I $(INC_DIR) -I libft/include
 
 CC			:=	cc
 RM			:=	rm -rf
-WFLAGS		:=
-RL_FLAG		:=	-lreadline -lhistory -lncurses
+WFLAGS		:=	-Wall -Wextra -Werror
+RLFLAGS		:=	-lreadline -lhistory
+VFLAGS		:=	--track-fds=yes --trace-children=yes --leak-check=full --show-leak-kinds=all
 
 CYAN		:=	\033[0;36m
 GREEN		:=	\033[0;32m
@@ -80,7 +83,7 @@ SUPPRESS := "\
 all: 			$(NAME)
 
 $(NAME):		$(LIBFT) $(OBJ)
-				@ $(CC) $(WFLAGS) $(OBJ) $(LIBFT) $(RL_FLAG) -o $(NAME)
+				@ $(CC) $(WFLAGS) $(OBJ) $(LIBFT) $(RLFLAGS) -o $(NAME)
 				@ echo "$(GREEN)[OK] $(NAME) built succesfully.$(RESET)"
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
@@ -107,6 +110,6 @@ re:				fclean all
 
 valgrind:		$(NAME)
 				@ echo $(SUPPRESS) > readline.supp
-				@ valgrind --suppressions=readline.supp --leak-check=full --show-leak-kinds=all ./$(NAME)
+				@ valgrind --suppressions=readline.supp $(VFLAGS) ./$(NAME)
 
-.PHONY:			all clean fclean re
+.PHONY:			all clean fclean re valgrind

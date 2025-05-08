@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   error.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sklaokli <sklaokli@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pkhienko42 <pkhienko42@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 00:55:17 by sklaokli          #+#    #+#             */
-/*   Updated: 2025/05/07 00:55:18 by sklaokli         ###   ########.fr       */
+/*   Updated: 2025/05/07 23:49:35 by pkhienko42       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,5 @@ int	errmsg_cmd(char *cmd, char *detail, char *err_msg, int err_nb)
 	if (err_msg)
 		msg = safe_strjoin(msg, err_msg);
 	ft_putendl_fd(msg, STDERR_FILENO);
-	free_ptr(msg);
 	return (err_nb);
 }

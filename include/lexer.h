@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sklaokli <sklaokli@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pkhienko42 <pkhienko42@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 18:40:43 by sklaokli          #+#    #+#             */
-/*   Updated: 2025/05/07 01:29:11 by sklaokli         ###   ########.fr       */
+/*   Updated: 2025/05/07 23:57:11 by pkhienko42       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,8 @@
 
 typedef enum e_syntax_status
 {
-	UNMATCHED_QUOTE
+	UNMATCHED_QUOTE,
+	ERROR_TOKEN
 }	t_syntax_status;
 
 typedef enum e_token_type
@@ -38,6 +39,7 @@ typedef struct s_token
 }	t_token;
 
 bool	validate_quotes(char *str);
+bool	validate_tokens(t_token *token);
 
 bool	is_operator(char c);
 int		handle_quotes(int start, t_shell *shell, int index, t_token **token);
