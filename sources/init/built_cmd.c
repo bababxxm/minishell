@@ -89,7 +89,7 @@ static inline bool	is_valid_pipe(t_token *s, t_token *e)
 	return (s && (s != e || s->type != TK_PIPE));
 }
 
-t_cmds	*create_cmd(t_token *start, t_token *end, t_cmds *tail)
+t_cmds	*create_cmd(t_token *start, t_token *end)
 {
 	char	*cmd;
 	char	**arg;
@@ -124,9 +124,6 @@ t_cmds	*create_cmd(t_token *start, t_token *end, t_cmds *tail)
 		start = start->next;
 	}
 	arg[s] = NULL;
-	(void)tail;
-	// if (!pipe_fd && (tail && tail->pipe_fd))
-	// 	pipe_fd = tail->pipe_fd;
 	return (new_cmd_full(cmd, arg, pipe_fd, io_fd));
 }
 
@@ -143,7 +140,7 @@ t_cmds	*built_cmd(t_token	*token)
 	while (token)
 	{
 
-		new = create_cmd(token, get_token_end(token), tail);
+		new = create_cmd(token, get_token_end(token));
 		token = get_token_end(token);
 		if (!new)
 			return (NULL);
