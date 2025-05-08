@@ -5,9 +5,9 @@ static t_io_fd	*new_io_fd()
 	t_io_fd	*io_fd;
 
 	io_fd = safealloc(1, sizeof(t_io_fd));
-	io_fd->heredoc = NULL;
 	io_fd->in_file = NULL;
 	io_fd->out_file = NULL;
+	io_fd->heredoc = false;
 	io_fd->append = false;
 	io_fd->fd_in = -1;
 	io_fd->fd_out = -1;
@@ -67,7 +67,7 @@ void	handle_redirection(t_token *redir, t_token *file, t_io_fd *io_fd)
 		io_fd->append = true;
 	}
 	else if (redir->type == TK_HEREDOC)
-		io_fd->heredoc = ft_strdup(file->value);
+		io_fd->heredoc = handle_heredoc(file, io_fd);
 }
 
 char	**create_arg(t_token *start, t_token *end, int *i)

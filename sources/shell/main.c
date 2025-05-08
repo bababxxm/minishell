@@ -6,7 +6,7 @@
 /*   By: pkhienko42 <pkhienko42@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 21:48:01 by sklaokli          #+#    #+#             */
-/*   Updated: 2025/05/08 20:32:56 by pkhienko42       ###   ########.fr       */
+/*   Updated: 2025/05/08 21:37:35 by pkhienko42       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,11 +56,12 @@ void	execute_cmds(t_shell *shell)
 		return ;
 	// printf("%s\n", shell->cmds->cmd);
 	shell->cmds = built_cmd(shell->token);
-	execute(shell);
+	shell->exit_code = execute(shell);
 }
 
 void	exit_shell(t_shell *shell)
 {
 	free_safealloc();
+	rl_clear_history();
 	exit(shell->exit_code);
 }

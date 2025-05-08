@@ -6,7 +6,7 @@
 /*   By: pkhienko42 <pkhienko42@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 18:22:50 by sklaokli          #+#    #+#             */
-/*   Updated: 2025/05/08 20:32:09 by pkhienko42       ###   ########.fr       */
+/*   Updated: 2025/05/08 21:19:51 by pkhienko42       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@
 # define RED "\033[0;31m"
 # define RESET "\033[0m"
 
-# define PROMPT RED"minishell"GREEN" $"RESET
+# define PROMPT RED"minishell"GREEN" $ "RESET
 
 # ifndef PATH_MAX
 #  define PATH_MAX 4096

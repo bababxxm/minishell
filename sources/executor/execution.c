@@ -20,17 +20,16 @@ int	execute_builtin(t_shell *shell, t_cmds *cmd)
 		else if (!ft_strncmp(cmd->cmd, "unset", 5) && ft_strlen(cmd->cmd) == 5)
 			ret = ft_unset(shell, cmd->arg);
 		else if (!ft_strncmp(cmd->cmd, "exit", 4) && ft_strlen(cmd->cmd) == 4)
-			ret = ft_exit(shell, cmd->arg);
+			ft_exit(shell, cmd->arg);
 	}
 	return (ret);
 }
 
-int	execute_cmd(t_cmds *cmd, char **envp, int out)
+int	execute_cmd(t_shell *shell, t_cmds *cmd, char **envp)
 {
 	pid_t	pid;
 	int		status;
 
-	(void)out;
 	pid = fork();
 	if (pid == -1)
 		return (errmsg_cmd("Fork", NULL, strerror(errno), EXIT_FAILURE));
@@ -48,7 +47,9 @@ int	execute_cmd(t_cmds *cmd, char **envp, int out)
 			close(cmd->pipe_fd[0]);
 			close(cmd->pipe_fd[1]);
 		}
-		if (execve(cmd->cmd, cmd->arg, envp) == -1 && cmd->cmd)
+		if (is_builtin(cmd->cmd))
+			execute_builtin(shell, cmd);
+		else if (execve(cmd->cmd, cmd->arg, envp) == -1 && cmd->cmd)
 			return (errmsg_cmd(cmd->cmd, NULL, "command not found", EXIT_FAILURE));
 	}
 	else
@@ -68,7 +69,6 @@ int	execute(t_shell *shell)
 	t_cmds	*cmd;
 	int		ret;
 
-	int	out	= dup(STDOUT_FILENO);
 	cmd = shell->cmds;
 	ret = EXIT_SUCCESS;
 	while (cmd)
@@ -80,12 +80,12 @@ int	execute(t_shell *shell)
 	cmd = shell->cmds;
 	while (cmd)
 	{
-		if (is_builtin(cmd->cmd))
+		if (is_builtin(cmd->cmd) && !cmd->next)
 			ret = execute_builtin(shell, cmd);
 		else
 		{
 			cmd->cmd = search_cmd(cmd->cmd, shell);
-			ret = execute_cmd(cmd, get_envp(shell->env), out);
+			ret = execute_cmd(shell, cmd, get_envp(shell->env));
 		}
 		restore_io(cmd->io_fd);
 		cmd = cmd->next;

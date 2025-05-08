@@ -49,34 +49,6 @@ void	restore_io(t_io_fd *io_fd)
     }
 }
 
-// void	close_pipe_fd(t_cmds *cmd, t_cmds *cur_cmd)
-// {
-// 	if (!cmd)
-// 		return ;
-// 	close_pipe_fd(cmd->left);
-// 	close_pipe_fd(cmd->right);
-// 	if (cmd->pipe_fd && cmd != cur_cmd)
-// 	{
-// 		close(cmd->pipe_fd[0]);
-// 		cmd->pipe_fd[0] = -1;
-// 		close(cmd->pipe_fd[1]);
-// 		cmd->pipe_fd[1] = -1;
-// 	}
-// }
-
-// void	close_fd(t_cmds *cmd, bool re_io)
-// {
-// 	if (!cmd)
-// 		return ;
-// 	if (cmd->io_fd->fd_in != -1)
-// 		close(cmd->io_fd->fd_in);
-// 	if (cmd->io_fd->fd_out != -1)
-// 		close(cmd->io_fd->fd_out);
-// 	if (re_io)
-// 		restore_io(cmd->io_fd);
-// 	close_pipe_fd();
-// }
-
 void	setup_redirect(t_io_fd *io_fd)
 {
 	int	flags;
@@ -91,6 +63,8 @@ void	setup_redirect(t_io_fd *io_fd)
 		}
 		dup2(io_fd->fd_in, STDIN_FILENO);
 	}
+	else if (io_fd->fd_in != -1)
+		dup2(io_fd->fd_in, STDIN_FILENO);
 	if (io_fd->out_file)
 	{
 		flags = O_WRONLY | O_CREAT;
@@ -106,4 +80,7 @@ void	setup_redirect(t_io_fd *io_fd)
 		}
 		dup2(io_fd->fd_out, STDOUT_FILENO);
 	}
+	else if (io_fd->fd_out != -1 && io_fd->heredoc)
+		dup2(io_fd->fd_out, STDOUT_FILENO);
+
 }

@@ -6,7 +6,7 @@
 /*   By: pkhienko42 <pkhienko42@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 02:04:03 by sklaokli          #+#    #+#             */
-/*   Updated: 2025/05/08 19:31:26 by pkhienko42       ###   ########.fr       */
+/*   Updated: 2025/05/08 22:04:59 by pkhienko42       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,9 @@
 
 typedef struct s_io_fd
 {
-	char	*heredoc;
 	char	*in_file;
 	char	*out_file;
+	bool	heredoc;
 	bool	append;
 	int		fd_in;
 	int		fd_out;
@@ -41,6 +41,7 @@ void	restore_io(t_io_fd *io_fd);
 void	redirect_io(t_io_fd *io_fd);
 void	setup_redirect(t_io_fd *io_fd);
 bool	is_builtin(char *cmd);
+bool	handle_heredoc(t_token *limit, t_io_fd *io_fd);
 int		*create_pipe_fd();
 int		execute(t_shell *shell);
 char	**get_envp(t_env *env);
