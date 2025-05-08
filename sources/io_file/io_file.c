@@ -62,9 +62,13 @@ void	setup_redirect(t_io_fd *io_fd)
 			return ;
 		}
 		dup2(io_fd->fd_in, STDIN_FILENO);
+		close(io_fd->fd_in);
 	}
-	else if (io_fd->fd_in != -1)
+	else if (io_fd->fd_in != -1 && io_fd->heredoc)
+	{
 		dup2(io_fd->fd_in, STDIN_FILENO);
+		close(io_fd->fd_in);
+	}
 	if (io_fd->out_file)
 	{
 		flags = O_WRONLY | O_CREAT;
@@ -79,8 +83,6 @@ void	setup_redirect(t_io_fd *io_fd)
 			return ;
 		}
 		dup2(io_fd->fd_out, STDOUT_FILENO);
+		close(io_fd->fd_out);
 	}
-	else if (io_fd->fd_out != -1 && io_fd->heredoc)
-		dup2(io_fd->fd_out, STDOUT_FILENO);
-
 }
