@@ -6,7 +6,7 @@
 /*   By: pkhienko42 <pkhienko42@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 00:55:17 by sklaokli          #+#    #+#             */
-/*   Updated: 2025/05/07 23:49:35 by pkhienko42       ###   ########.fr       */
+/*   Updated: 2025/05/09 09:50:34 by pkhienko42       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ static bool	is_export(char *cmd)
 	return (false);
 }
 
-int	errmsg_cmd(char *cmd, char *detail, char *err_msg, int err_nb)
+int	errmsg(char *cmd, char *detail, char *err_msg, int err_nb)
 {
 	char	*msg;
 	bool	export;
@@ -28,20 +28,40 @@ int	errmsg_cmd(char *cmd, char *detail, char *err_msg, int err_nb)
 	msg = ft_strdup("minishell: ");
 	if (cmd)
 	{
-		msg = safe_strjoin(msg, cmd);
-		msg = safe_strjoin(msg, ": ");
+		msg = strappend(msg, cmd);
+		msg = strappend(msg, ": ");
 	}
 	if (detail)
 	{
 		if (export)
-			msg = safe_strjoin(msg, "`");
-		msg = safe_strjoin(msg, detail);
+			msg = strappend(msg, "`");
+		msg = strappend(msg, detail);
 		if (export)
-			msg = safe_strjoin(msg, "'");
-		msg = safe_strjoin(msg, ": ");
+			msg = strappend(msg, "'");
+		msg = strappend(msg, ": ");
 	}
 	if (err_msg)
-		msg = safe_strjoin(msg, err_msg);
+		msg = strappend(msg, err_msg);
 	ft_putendl_fd(msg, STDERR_FILENO);
 	return (err_nb);
+}
+
+// to do
+int	cmd_not_found(t_cmds *cmd, char *c, bool only_not_found)
+{
+	if (!cmd || !cmd->cmd)
+		return (errmsg("minishell", NULL, "invalid command", CMD_NOT_FOUND));
+
+	// ถ้าไม่มี '/' → ไม่ใช่ path → ไม่ต้องเช็ค access ตรงนี้
+	if (!ft_strchr(cmd->cmd, '/') && access(c, F_OK) == -1)
+		return (errmsg(cmd->cmd, NULL, "command not found", CMD_NOT_FOUND));
+
+	// ถ้ามี '/' → เป็น path ที่ user ใส่มาเอง เช่น ./a.out หรือ /bin/ls
+	if (access(cmd->cmd, F_OK) == -1 && only_not_found)
+		return (errmsg(cmd->cmd, NULL, strerror(errno), CMD_NOT_FOUND));
+	if (is_dir(cmd->cmd) && only_not_found)
+		return (errmsg(cmd->cmd, NULL, "Is a directory", CMD_NOT_EXECUTABLE));
+	if (access(cmd->cmd, X_OK) == -1 && only_not_found)
+		return (errmsg(cmd->cmd, NULL, strerror(errno), CMD_NOT_EXECUTABLE));
+	return (EXIT_SUCCESS);
 }

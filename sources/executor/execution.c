@@ -20,19 +20,19 @@ int	execute_builtin(t_shell *shell, t_cmds *cmd)
 		else if (!ft_strncmp(cmd->cmd, "unset", 5) && ft_strlen(cmd->cmd) == 5)
 			ret = ft_unset(shell, cmd->arg);
 		else if (!ft_strncmp(cmd->cmd, "exit", 4) && ft_strlen(cmd->cmd) == 4)
-			ft_exit(shell, cmd->arg);
+			ret = ft_exit(shell, cmd->arg);
 	}
 	return (ret);
 }
 
-int	execute_cmd(t_shell *shell, t_cmds *cmd, char **envp)
+int	execute_cmd(t_shell *shell, t_cmds *cmd, char **envp, char *c)
 {
 	pid_t	pid;
 	int		status;
 
 	pid = fork();
 	if (pid == -1)
-		return (errmsg_cmd("Fork", NULL, strerror(errno), EXIT_FAILURE));
+		return (errmsg("Fork", NULL, strerror(errno), EXIT_FAILURE));
 	if (!pid)
 	{
 		if (cmd->prev && cmd->prev->pipe_fd)
@@ -47,10 +47,11 @@ int	execute_cmd(t_shell *shell, t_cmds *cmd, char **envp)
 			close(cmd->pipe_fd[0]);
 			close(cmd->pipe_fd[1]);
 		}
-		if (is_builtin(cmd->cmd))
+		if (is_builtin(c))
 			execute_builtin(shell, cmd);
-		else if (execve(cmd->cmd, cmd->arg, envp) == -1 && cmd->cmd)
-			return (errmsg_cmd(cmd->cmd, NULL, "command not found", EXIT_FAILURE));
+		else if (execve(c, cmd->arg, envp) == -1 && c)
+			return (cmd_not_found(cmd, c, true));
+			// return (errmsg(cmd->cmd, NULL, strerror(errno), CMD_NOT_FOUND));
 	}
 	else
 	{
@@ -84,8 +85,9 @@ int	execute(t_shell *shell)
 			ret = execute_builtin(shell, cmd);
 		else
 		{
-			cmd->cmd = search_cmd(cmd->cmd, shell);
-			ret = execute_cmd(shell, cmd, get_envp(shell->env));
+			// ret = cmd_not_found(cmd, search_cmd(cmd->cmd, shell), false);
+			// if (!ret)
+			ret = execute_cmd(shell, cmd, get_envp(shell->env), search_cmd(cmd->cmd, shell));
 		}
 		restore_io(cmd->io_fd);
 		cmd = cmd->next;

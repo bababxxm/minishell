@@ -6,7 +6,7 @@
 /*   By: pkhienko42 <pkhienko42@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 00:53:38 by sklaokli          #+#    #+#             */
-/*   Updated: 2025/05/07 23:49:07 by pkhienko42       ###   ########.fr       */
+/*   Updated: 2025/05/09 03:45:45 by pkhienko42       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 static bool	is_valid_input(int i, char *str, bool *equal_plus)
 {
 	if (!str || !ft_isalpha(str[0]))
-		return (errmsg_cmd("export", str, "not a valid identifier", false));
+		return (errmsg("export", str, "not a valid identifier", false));
 	while (str[++i])
 	{
 		if (!ft_isalnum(str[i]))
@@ -30,7 +30,7 @@ static bool	is_valid_input(int i, char *str, bool *equal_plus)
 				equal_plus[0] = true;
 				break ;
 			}
-			return (errmsg_cmd("export", str, "not a valid identifier", false));
+			return (errmsg("export", str, "not a valid identifier", false));
 		}
 	}
 	return (true);

@@ -6,7 +6,7 @@
 /*   By: pkhienko42 <pkhienko42@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 18:20:18 by sklaokli          #+#    #+#             */
-/*   Updated: 2025/05/07 23:50:03 by pkhienko42       ###   ########.fr       */
+/*   Updated: 2025/05/09 02:19:10 by pkhienko42       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ int	var_length(char *str)
 	return (i);
 }
 
-char	*ft_expand(char *str, int *ptr, t_env *env)
+char	*ft_expand(char *str, int *ptr, t_env *env, t_shell *shell)
 {
 	char	*key;
 	char	*expand;
@@ -58,12 +58,11 @@ char	*ft_expand(char *str, int *ptr, t_env *env)
 		return (ft_strdup("$"));
 	key = ft_substr(str, start, len);
 	if (!ft_strncmp(key, "?", 2))
-		expand = ft_strdup("127");
+		expand = ft_itoa(shell->exit_code);
 	else if (!ft_strncmp(key, "_", 2))
 		expand = ft_strdup("");
 	else
 		expand = ft_strdup(get_value(env, key));
-	// free_ptr(key);
 	*ptr = start + len;
 	return (expand);
 }
@@ -76,18 +75,16 @@ char	*cut_invalid_expand(char *str)
 
 	len = ft_strlen(str) - 1;
 	if (len <= 0)
-		// return (free_ptr(str), ft_strdup(""));
 		return (ft_strdup(""));
 	res = safealloc(len + 1, sizeof(char));
 	i = -1;
 	while (++i < len)
 		res[i] = str[i];
 	res[i] = '\0';
-	// return (free_ptr(str), res);
 	return (res);
 }
 
-char	*expand_variable(char *str, t_env *env)
+char	*expand_variable(char *str, t_env *env, t_shell *shell)
 {
 	int		i;
 	int		start;
@@ -99,7 +96,7 @@ char	*expand_variable(char *str, t_env *env)
 	while (str[i])
 	{
 		if (str[i] == '$')
-			tmp = ft_expand(str, &i, env);
+			tmp = ft_expand(str, &i, env, shell);
 		else
 		{
 			start = i;

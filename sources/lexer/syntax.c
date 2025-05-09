@@ -6,7 +6,7 @@
 /*   By: pkhienko42 <pkhienko42@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 18:26:05 by sklaokli          #+#    #+#             */
-/*   Updated: 2025/05/07 23:52:14 by pkhienko42       ###   ########.fr       */
+/*   Updated: 2025/05/09 02:20:34 by pkhienko42       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int	handle_quotes(int start, t_shell *shell,\
 		return (end);
 	str = ft_substr(shell->input, start + 1, end - start - 1);
 	if (quote == '\"' && has_expand(str))
-		str = expand_variable(str, shell->env);
+		str = expand_variable(str, shell->env, shell);
 	if (!str)
 		add_token(index, str, TK_WORD, token);
 	else if (str[0] == '-' && str[1])
@@ -55,7 +55,7 @@ int	handle_unquotes(int start, t_shell *shell,\
 		end++;
 	str = ft_substr(shell->input, start, end - start);
 	if (has_expand(str))
-		str = expand_variable(str, shell->env);
+		str = expand_variable(str, shell->env, shell);
 	if (shell->input[end - 1] == '$'
 		&& (shell->input[end] == '\'' || shell->input[end] == '\"'))
 		str = cut_invalid_expand(str);

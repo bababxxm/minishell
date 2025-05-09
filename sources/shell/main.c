@@ -6,7 +6,7 @@
 /*   By: pkhienko42 <pkhienko42@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 21:48:01 by sklaokli          #+#    #+#             */
-/*   Updated: 2025/05/08 21:37:35 by pkhienko42       ###   ########.fr       */
+/*   Updated: 2025/05/09 09:55:36 by pkhienko42       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,18 @@
 int	main(int argc, char *argv[], char **env)
 {
 	t_shell	shell;
+	char	*prompt;
 
 	(void)argc;
 	(void)argv;
 	init_shell(&shell, env);
 	while (true)
 	{
+		prompt = strappend(ft_strdup(PROMPT), ft_strdup("["B_YELLOW));
+		prompt = strappend(prompt, ft_itoa(shell.exit_code));
+		prompt = strappend(prompt, ft_strdup(B_RED"] : ["B_GREEN));
+		prompt = strappend(prompt, ft_strdup(shell.pwd));
+		prompt = strappend(prompt, ft_strdup(B_RED"]"B_CYAN" $ "RESET));
 		shell.input = readline(PROMPT);
 		if (!shell.input)
 			exit_shell(&shell);

@@ -6,7 +6,7 @@
 /*   By: pkhienko42 <pkhienko42@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 18:40:43 by sklaokli          #+#    #+#             */
-/*   Updated: 2025/05/07 23:57:11 by pkhienko42       ###   ########.fr       */
+/*   Updated: 2025/05/09 02:16:51 by pkhienko42       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,9 +48,9 @@ int		handle_unquotes(int start, t_shell *shell, int index, t_token **token);
 
 bool	has_expand(char *str);
 int		var_length(char *str);
-char	*ft_expand(char *str, int *ptr, t_env *env);
+char	*ft_expand(char *str, int *ptr, t_env *env, t_shell *shell);
 char	*cut_invalid_expand(char *str);
-char	*expand_variable(char *str, t_env *env);
+char	*expand_variable(char *str, t_env *env, t_shell *shell);
 
 int		add_subtoken_index(int i, char *str, int index);
 int		token_strlen(t_token *subtoken, int index);

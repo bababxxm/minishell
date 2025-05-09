@@ -51,7 +51,7 @@ void	handle_redirection(t_token *redir, t_token *file, t_io_fd *io_fd)
 {
 	if (!file || file->type != TK_WORD)
 	{
-		errmsg_cmd(redir->value, NULL, "missing file for redirection", 2);
+		errmsg(redir->value, NULL, "missing file for redirection", 1);
 		return ;
 	}
 	if (redir->type == TK_REDIRECT_IN)

@@ -19,8 +19,8 @@ char	**get_envp(t_env *env)
 	len = 0;
 	while (tmp)
 	{
-		envp[len] = safe_strjoin(ft_strdup(tmp->key), ft_strdup("="));
-		envp[len] = safe_strjoin(envp[len], ft_strdup(tmp->value));
+		envp[len] = strappend(ft_strdup(tmp->key), ft_strdup("="));
+		envp[len] = strappend(envp[len], ft_strdup(tmp->value));
 		tmp = tmp->next;
 		len++;
 	}
@@ -67,6 +67,22 @@ bool is_builtin(char *cmd)
     return (false);
 }
 
+void heredoc_sig_handler(int sig)
+{
+	(void)sig;
+	write(1, "\n", 1);
+	exit(EXIT_FAILURE);
+}
+
+bool	is_dir(char *cmd)
+{
+	struct stat	st;
+
+	if (stat(cmd, &st) == -1)
+		return (false);
+	return (S_ISDIR(st.st_mode));
+}
+
 bool	handle_heredoc(t_token *limit, t_io_fd *io_fd)
 {
 	int		pipe_fd[2];
@@ -74,9 +90,10 @@ bool	handle_heredoc(t_token *limit, t_io_fd *io_fd)
 
 	if (pipe(pipe_fd) == -1)
 	{
-		errmsg_cmd("Pipe", NULL, strerror(errno), EXIT_FAILURE);
+		errmsg("Pipe", NULL, strerror(errno), EXIT_FAILURE);
 		return (false);
 	}
+	signal(SIGINT, heredoc_sig_handler);
 	while (true)
 	{
 		line = readline("> ");
@@ -86,6 +103,7 @@ bool	handle_heredoc(t_token *limit, t_io_fd *io_fd)
 		write(pipe_fd[1], "\n", 1);
 	}
 	close(pipe_fd[1]);
+	signal(SIGINT, sighandler);
 	io_fd->fd_in = pipe_fd[0];
 	return (true);
 }

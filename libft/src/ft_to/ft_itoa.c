@@ -6,11 +6,12 @@
 /*   By: pkhienko42 <pkhienko42@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/28 18:18:09 by pkhienko          #+#    #+#             */
-/*   Updated: 2025/05/07 23:36:49 by pkhienko42       ###   ########.fr       */
+/*   Updated: 2025/05/09 02:21:06 by pkhienko42       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
+#include <stdio.h>
 
 static int	numlen(int n)
 {
@@ -36,8 +37,6 @@ char	*ft_itoa(int n)
 	nb = n;
 	size = numlen(nb);
 	str = (char *)safealloc(size + 1, sizeof(char));
-	if (!str)
-		return (NULL);
 	str[size] = '\0';
 	if (nb == 0)
 		str[0] = '0';

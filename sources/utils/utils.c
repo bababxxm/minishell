@@ -6,7 +6,7 @@
 /*   By: pkhienko42 <pkhienko42@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 22:33:24 by sklaokli          #+#    #+#             */
-/*   Updated: 2025/05/08 16:18:11 by pkhienko42       ###   ########.fr       */
+/*   Updated: 2025/05/09 04:44:54 by pkhienko42       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int	ft_strlen_to_c(char *str, char c)
 	return (len);
 }
 
-char	*safe_strjoin(char *str, char *append)
+char	*strappend(char *str, char *append)
 {
 	char	*tmp;
 
