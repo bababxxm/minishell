@@ -6,7 +6,7 @@
 /*   By: pkhienko42 <pkhienko42@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 22:33:24 by sklaokli          #+#    #+#             */
-/*   Updated: 2025/05/09 04:44:54 by pkhienko42       ###   ########.fr       */
+/*   Updated: 2025/05/09 17:08:07 by pkhienko42       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,5 +44,4 @@ void	increment_shlvl(t_env *env, char *key)
 	level = ft_atoi(get_value(env, key)) + 1;
 	value = ft_itoa(level);
 	set_env(&env, key, value);
-	// free_ptr(value);
 }

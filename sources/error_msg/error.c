@@ -6,7 +6,7 @@
 /*   By: pkhienko42 <pkhienko42@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 00:55:17 by sklaokli          #+#    #+#             */
-/*   Updated: 2025/05/09 09:50:34 by pkhienko42       ###   ########.fr       */
+/*   Updated: 2025/05/09 17:12:22 by pkhienko42       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,14 +49,10 @@ int	errmsg(char *cmd, char *detail, char *err_msg, int err_nb)
 // to do
 int	cmd_not_found(t_cmds *cmd, char *c, bool only_not_found)
 {
-	if (!cmd || !cmd->cmd)
-		return (errmsg("minishell", NULL, "invalid command", CMD_NOT_FOUND));
+	(void)c;
 
-	// ถ้าไม่มี '/' → ไม่ใช่ path → ไม่ต้องเช็ค access ตรงนี้
-	if (!ft_strchr(cmd->cmd, '/') && access(c, F_OK) == -1)
+	if ((!ft_strncmp(cmd->cmd, ".", 1) || !ft_strncmp(cmd->cmd, "/", 1)) && access(cmd->cmd, F_OK) == -1)
 		return (errmsg(cmd->cmd, NULL, "command not found", CMD_NOT_FOUND));
-
-	// ถ้ามี '/' → เป็น path ที่ user ใส่มาเอง เช่น ./a.out หรือ /bin/ls
 	if (access(cmd->cmd, F_OK) == -1 && only_not_found)
 		return (errmsg(cmd->cmd, NULL, strerror(errno), CMD_NOT_FOUND));
 	if (is_dir(cmd->cmd) && only_not_found)

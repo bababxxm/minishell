@@ -97,7 +97,7 @@ bool	handle_heredoc(t_token *limit, t_io_fd *io_fd)
 	while (true)
 	{
 		line = readline("> ");
-		if (!line || !ft_strncmp(line, limit->value, ft_strlen(limit->value)))
+		if (!line || (!ft_strncmp(line, limit->value, -1) && ft_strlen(limit->value)))
 			break ;
 		write(pipe_fd[1], line, ft_strlen(line));
 		write(pipe_fd[1], "\n", 1);

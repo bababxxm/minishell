@@ -6,7 +6,7 @@
 /*   By: pkhienko42 <pkhienko42@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 21:48:01 by sklaokli          #+#    #+#             */
-/*   Updated: 2025/05/09 09:55:36 by pkhienko42       ###   ########.fr       */
+/*   Updated: 2025/05/09 17:06:29 by pkhienko42       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int	main(int argc, char *argv[], char **env)
 		prompt = strappend(prompt, ft_strdup(B_RED"] : ["B_GREEN));
 		prompt = strappend(prompt, ft_strdup(shell.pwd));
 		prompt = strappend(prompt, ft_strdup(B_RED"]"B_CYAN" $ "RESET));
-		shell.input = readline(PROMPT);
+		shell.input = readline(prompt);
 		if (!shell.input)
 			exit_shell(&shell);
 		execute_cmds(&shell);
