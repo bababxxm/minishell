@@ -6,7 +6,7 @@
 /*   By: pkhienko42 <pkhienko42@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 18:21:08 by sklaokli          #+#    #+#             */
-/*   Updated: 2025/05/07 23:53:31 by pkhienko42       ###   ########.fr       */
+/*   Updated: 2025/05/11 23:25:14 by pkhienko42       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,9 +43,14 @@ void	token_strjoin(t_token **token, t_token *subtoken, int len, int index)
 	int		type;
 	char	*join;
 
-	if (len <= 0)
+	if (!subtoken->value)
 	{
 		add_token(index, NULL, TK_WORD, token);
+		return ;
+	}
+	if (!subtoken->value[0])
+	{
+		add_token(index, ft_strdup(""), TK_WORD, token);
 		return ;
 	}
 	join = safealloc(len + 1, sizeof(char));

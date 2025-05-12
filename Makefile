@@ -6,7 +6,7 @@
 #    By: pkhienko42 <pkhienko42@student.42.fr>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/18 19:44:55 by sklaokli          #+#    #+#              #
-#    Updated: 2025/05/08 18:05:47 by pkhienko42       ###   ########.fr        #
+#    Updated: 2025/05/12 17:02:46 by pkhienko42       ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -41,6 +41,7 @@ FILES		:=	\
 				executor/execution_util.c \
 				io_file/io_file.c \
 				error_msg/error.c \
+				signal/signal.c \
 				utils/utils.c
 
 

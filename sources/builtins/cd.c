@@ -6,7 +6,7 @@
 /*   By: pkhienko42 <pkhienko42@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 00:53:11 by sklaokli          #+#    #+#             */
-/*   Updated: 2025/05/09 09:10:27 by pkhienko42       ###   ########.fr       */
+/*   Updated: 2025/05/09 19:09:23 by pkhienko42       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,19 +40,21 @@ static bool	change_dir(t_shell *shell, char *path)
 
 int	ft_cd(t_shell *shell, char **av)
 {
-	char	*path;
+    char    *path;
+    int        cnt;
 
-	if (av[2])
-		return (errmsg("cd", NULL, "too many arguments", EXIT_FAILURE));
-	else if (!av[1] || !ft_strncmp(av[1], "~", 1)
-		|| !ft_strncmp(av[1], "--", 2))
-		return (!change_dir(shell, shell->home));
-	// cd - bug
-	else if (av[1] && !ft_strncmp(av[1], "-", 1))
-	{
-		ft_putendl_fd(shell->oldpwd, STDOUT_FILENO);
-		return (!change_dir(shell, shell->oldpwd));
-	}
-	path = av[1];
-	return (!change_dir(shell, path));
+    cnt = -1;
+    while (av[++cnt]);
+    if (cnt > 2)
+        return (errmsg("cd", NULL, "too many arguments", EXIT_FAILURE));
+    else if (av[0] && (cnt == 1 || cnt == 2) && (!ft_strncmp(av[1], "~", -1)
+        || !ft_strncmp(av[1], "--", -1)))
+        return (!change_dir(shell, shell->home));
+    else if (cnt == 2 && !ft_strncmp(av[1], "-", -1))
+    {
+        ft_putendl_fd(shell->oldpwd, STDOUT_FILENO);
+        return (!change_dir(shell, shell->oldpwd));
+    }
+    path = av[1];
+    return (!change_dir(shell, path));
 }

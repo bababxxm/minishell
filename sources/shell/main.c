@@ -6,7 +6,7 @@
 /*   By: pkhienko42 <pkhienko42@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 21:48:01 by sklaokli          #+#    #+#             */
-/*   Updated: 2025/05/09 17:06:29 by pkhienko42       ###   ########.fr       */
+/*   Updated: 2025/05/12 13:59:31 by pkhienko42       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,44 +15,41 @@
 int	main(int argc, char *argv[], char **env)
 {
 	t_shell	shell;
-	char	*prompt;
 
 	(void)argc;
 	(void)argv;
 	init_shell(&shell, env);
 	while (true)
 	{
-		prompt = strappend(ft_strdup(PROMPT), ft_strdup("["B_YELLOW));
-		prompt = strappend(prompt, ft_itoa(shell.exit_code));
-		prompt = strappend(prompt, ft_strdup(B_RED"] : ["B_GREEN));
-		prompt = strappend(prompt, ft_strdup(shell.pwd));
-		prompt = strappend(prompt, ft_strdup(B_RED"]"B_CYAN" $ "RESET));
-		shell.input = readline(prompt);
+		// shell.input = readline(get_prompt(&shell));
+		shell.input = readline("minishell$ ");
 		if (!shell.input)
 			exit_shell(&shell);
 		execute_cmds(&shell);
 		add_history(shell.input);
-		// t_cmds	*tmp = shell.cmds;
-		// while (tmp)
-		// {
-		// 	int i = -1;
-		// 	printf("cmd= %s\n", tmp->cmd);
-		// 	while (tmp->arg[++i])
-		// 		printf("arg= %s\n", tmp->arg[i]);
-		// 	if (!tmp->pipe_fd)
-		// 		printf("NULL\n");
-		// 	else
-		// 		printf("pipe= %d:%d\n", tmp->pipe_fd[0], tmp->pipe_fd[1]);
-		// 	if (tmp->io_fd->in_file)
-		// 		printf("In file= %s\n", tmp->io_fd->in_file);
-		// 	if (tmp->io_fd->out_file)
-		// 		printf("Out file= %s\n", tmp->io_fd->out_file);
-		// 	if (tmp->io_fd->heredoc)
-		// 		printf("Heredoc= %s\n", tmp->io_fd->heredoc);
-		// 	tmp = tmp->next;
-		// }
 	}
 	exit_shell(&shell);
+}
+
+char    *get_prompt(t_shell *shell)
+{
+    char    *path;
+    char    *prompt;
+    
+    if (shell->exit_code == 0)
+        prompt = strappend(B_YELLOW"["B_GREEN, ft_itoa(shell->exit_code));
+    else
+        prompt = strappend(B_YELLOW"["B_RED, ft_itoa(shell->exit_code));
+    prompt = strappend(prompt, B_YELLOW"] "B_RED);
+    prompt = strappend(prompt, ft_strdup(shell->user));
+    if (!ft_strncmp(shell->home, shell->pwd, ft_strlen(shell->home)))
+        path = strappend("~", ft_strdup(shell->pwd + ft_strlen(shell->home)));
+    else
+        path = ft_strdup(shell->pwd);
+    prompt = strappend(prompt, B_YELLOW":"B_GREEN);
+    prompt = strappend(prompt, path);
+    prompt = strappend(prompt, B_YELLOW"$ "RESET);
+    return (prompt);
 }
 
 void	execute_cmds(t_shell *shell)
@@ -60,13 +57,13 @@ void	execute_cmds(t_shell *shell)
 	shell->token = tokenizer(shell);
 	if (!shell->token)
 		return ;
-	// printf("%s\n", shell->cmds->cmd);
-	shell->cmds = built_cmd(shell->token);
+	shell->cmds = built_cmd(shell->token, shell);
 	shell->exit_code = execute(shell);
 }
 
 void	exit_shell(t_shell *shell)
 {
+	close_fd(shell->cmds);
 	free_safealloc();
 	rl_clear_history();
 	exit(shell->exit_code);

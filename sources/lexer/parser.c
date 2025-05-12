@@ -6,7 +6,7 @@
 /*   By: pkhienko42 <pkhienko42@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 23:04:29 by sklaokli          #+#    #+#             */
-/*   Updated: 2025/05/07 23:52:06 by pkhienko42       ###   ########.fr       */
+/*   Updated: 2025/05/09 20:18:15 by pkhienko42       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,29 +53,30 @@ bool	is_operator_token(t_token *token)
 		|| token->type == TK_APPEND);
 }
 
-bool	validate_tokens(t_token *token)
+bool    validate_tokens(t_token *token)
 {
-	t_token	*before;
-	t_token	*after;
+    t_token    *before;
+    t_token    *after;
 
-	if (!token)
-		return (false);
-	before = NULL;
-	after = token->next;
-	while (token)
-	{
-		if (!before && token->type == TK_PIPE)
-			return (syntax_errmsg(ERROR_TOKEN, "|"), false);
-		else if (token->type == TK_PIPE && !after)
-			return (syntax_errmsg(ERROR_TOKEN, "|"), false);
-		else if (is_operator_token(token) && !after)
-			return (syntax_errmsg(ERROR_TOKEN, "newline"), false);
-		else if (is_operator_token(token) && is_operator_token(after))
-			return (syntax_errmsg(ERROR_TOKEN, after->value), false);
-		before = token;
-		token = token->next;
-		if (token)
-			after = token->next;
-	}
-	return (true);
+    if (!token)
+        return (false);
+    before = NULL;
+    after = token->next;
+    while (token)
+    {
+        if (!before && token->type == TK_PIPE)
+            return (syntax_errmsg(ERROR_TOKEN, "|"), false);
+        else if (token->type == TK_PIPE && !after)
+            return (syntax_errmsg(ERROR_TOKEN, "|"), false);
+        else if (is_operator_token(token) && !after)
+            return (syntax_errmsg(ERROR_TOKEN, "newline"), false);
+        else if (is_operator_token(token) && token->type != TK_PIPE
+            && is_operator_token(after))
+            return (syntax_errmsg(ERROR_TOKEN, after->value), false);
+        before = token;
+        token = token->next;
+        if (token)
+            after = token->next;
+    }
+    return (true);
 }

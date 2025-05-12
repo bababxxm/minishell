@@ -6,7 +6,7 @@
 /*   By: pkhienko42 <pkhienko42@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 18:22:50 by sklaokli          #+#    #+#             */
-/*   Updated: 2025/05/09 04:52:00 by pkhienko42       ###   ########.fr       */
+/*   Updated: 2025/05/12 17:06:03 by pkhienko42       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,16 +31,17 @@
 # include "lexer.h"
 # include "builtin.h"
 # include "command.h"
+# include "_signal.h"
 
-# define B_YELLOW "\033[1;33m"
-# define B_GREEN "\033[1;32m"
-# define B_CYAN "\033[1;36m"
-# define B_RED "\033[1;31m"
-# define YELLOW "\033[0;33m"
-# define GREEN "\033[0;32m"
-# define CYAN "\033[0;36m"
-# define RED "\033[0;31m"
-# define RESET "\033[0m"
+# define B_YELLOW "\001\033[1;33m\002"
+# define B_GREEN "\001\033[1;32m\002"
+# define B_CYAN "\001\033[1;36m\002"
+# define B_RED "\001\033[1;31m\002"
+# define YELLOW "\001\033[0;33m\002"
+# define GREEN "\001\033[0;32m\002"
+# define CYAN "\001\033[0;36m\002"
+# define RED "\001\033[0;31m\002"
+# define RESET "\001\033[0m\002" 
 
 # define PROMPT B_RED"Minishell "
 
@@ -66,6 +67,7 @@ typedef struct s_shell
 	t_env		*env;
 	t_token		*token;
 	t_cmds		*cmds;
+	pid_t		pid;
 	int			exit_code;			
 }	t_shell;
 
@@ -76,6 +78,7 @@ void	exit_shell(t_shell *shell);
 void	sighandler(int signum);
 
 void	*safe_malloc(size_t	size);
+char    *get_prompt(t_shell *shell);
 char	*strappend(char *str, char *append);
 int		ft_strlen_to_c(char *str, char c);
 void	increment_shlvl(t_env *env, char *key);

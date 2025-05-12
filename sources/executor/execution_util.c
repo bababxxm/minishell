@@ -28,7 +28,28 @@ char	**get_envp(t_env *env)
 	return (envp);
 }
 
-char	*search_cmd(char *cmd, t_shell *shell)
+void	is_wrong_cmd(char *cmd, int *ret)
+{
+	int	fd;
+
+	if (!cmd)
+		return ;
+	fd = open(cmd, O_WRONLY);
+	if (ft_strchr(cmd, '/') && fd == -1 && !is_dir(cmd))
+	{
+		if (access(cmd, R_OK))
+			*ret = errmsg(cmd, NULL, "Permission denied", CMD_NOT_EXECUTABLE);
+		else if (fd == -1 && !is_dir(cmd))
+			*ret = errmsg(cmd, NULL, "No such file or directory", CMD_NOT_FOUND);
+		else
+			*ret = errmsg(cmd, NULL, "command not found", CMD_NOT_FOUND);
+		return ;
+	}
+	*ret = EXIT_SUCCESS;
+	close(fd);
+}
+
+char	*search_cmd(char *cmd, t_shell *shell, int *ret)
 {
 	char	**all_path;
 	char	*select_path;
@@ -46,7 +67,10 @@ char	*search_cmd(char *cmd, t_shell *shell)
 		select_path = ft_strjoin(all_path[i], "/");
 		new_cmd = ft_strjoin(select_path, cmd);
 		if (!access(new_cmd, F_OK | X_OK))
+		{
+			is_wrong_cmd(cmd, ret);
 			return (new_cmd);
+		}
 	}
 	return (ft_strdup(cmd));
 }
@@ -71,7 +95,7 @@ void heredoc_sig_handler(int sig)
 {
 	(void)sig;
 	write(1, "\n", 1);
-	exit(EXIT_FAILURE);
+	exit(SIGINT);
 }
 
 bool	is_dir(char *cmd)
@@ -83,27 +107,46 @@ bool	is_dir(char *cmd)
 	return (S_ISDIR(st.st_mode));
 }
 
-bool	handle_heredoc(t_token *limit, t_io_fd *io_fd)
+//fix expand and signal
+bool	handle_heredoc(t_token *limit, t_io_fd *io_fd, int *exit_code)
 {
 	int		pipe_fd[2];
+	int		status;
 	char	*line;
+	pid_t	pid;
 
 	if (pipe(pipe_fd) == -1)
+		return (errmsg("Pipe", NULL, strerror(errno), 0));
+	pid = fork();
+	if (pid == -1)
+		return (errmsg("Fork", NULL, strerror(errno), 0));
+	if (!pid)
 	{
-		errmsg("Pipe", NULL, strerror(errno), EXIT_FAILURE);
+		signal(SIGINT, heredoc_sig_handler);
+		close(pipe_fd[0]);
+		while (true)
+		{
+			line = readline("> ");
+			if (!line || (!ft_strncmp(line, limit->value, -1) && ft_strlen(limit->value)))
+				break ;
+			write(pipe_fd[1], line, ft_strlen(line));
+			write(pipe_fd[1], "\n", 1);
+		}
+		close(pipe_fd[1]);
+		exit(EXIT_SUCCESS);
+	}
+	signal(SIGINT, SIG_IGN);
+	close(pipe_fd[1]);
+	waitpid(pid, &status, 0);
+	signal(SIGINT, sighandler);
+	printf("status %d\n", 2 & 0x7f);
+	if (WIFSIGNALED(status) && WTERMSIG(status) == 512)
+	{
+		*exit_code = 128 + WTERMSIG(status);
+		printf("in %d\n", *exit_code);
+		close(pipe_fd[0]);
 		return (false);
 	}
-	signal(SIGINT, heredoc_sig_handler);
-	while (true)
-	{
-		line = readline("> ");
-		if (!line || (!ft_strncmp(line, limit->value, -1) && ft_strlen(limit->value)))
-			break ;
-		write(pipe_fd[1], line, ft_strlen(line));
-		write(pipe_fd[1], "\n", 1);
-	}
-	close(pipe_fd[1]);
-	signal(SIGINT, sighandler);
 	io_fd->fd_in = pipe_fd[0];
 	return (true);
 }

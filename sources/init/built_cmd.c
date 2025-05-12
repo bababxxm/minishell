@@ -9,6 +9,7 @@ static t_io_fd	*new_io_fd()
 	io_fd->out_file = NULL;
 	io_fd->heredoc = false;
 	io_fd->append = false;
+	io_fd->err_redir = false;
 	io_fd->fd_in = -1;
 	io_fd->fd_out = -1;
 	io_fd->stdin_backup = -1;
@@ -30,7 +31,6 @@ t_cmds	*new_cmd_full(char *cmd, char **arg, int *pipe_fd, t_io_fd *io_fd)
 	return (command);
 }
 
-
 t_token	*get_token_end(t_token *token)
 {
 	t_token	*cur;
@@ -47,27 +47,49 @@ t_token	*get_token_end(t_token *token)
 	return (cur);
 }
 
-void	handle_redirection(t_token *redir, t_token *file, t_io_fd *io_fd)
+void	handle_redirection(t_token *redir, t_token *file, t_io_fd *io_fd, t_shell *shell)
 {
+	int	fd;
+
 	if (!file || file->type != TK_WORD)
 	{
 		errmsg(redir->value, NULL, "missing file for redirection", 1);
 		return ;
 	}
-	if (redir->type == TK_REDIRECT_IN)
-		io_fd->in_file = ft_strdup(file->value);
-	else if (redir->type == TK_REDIRECT_OUT)
+	if (redir->type == TK_REDIRECT_IN && !io_fd->err_redir)
 	{
+		fd = open(file->value, O_WRONLY);
+		if (fd == -1)
+		{
+			io_fd->in_file = ft_strdup(file->value);
+			io_fd->err_redir = true;
+			return ;
+		}
+		io_fd->in_file = ft_strdup(file->value);
+		close(fd);
+	}
+	else if (redir->type == TK_REDIRECT_OUT && !io_fd->err_redir)
+	{
+		if (access(file->value, F_OK))
+			io_fd->err_redir = false;
+		else if (access(file->value, W_OK))
+			io_fd->err_redir = true;
+		fd = open(file->value, O_CREAT | O_WRONLY | O_TRUNC, 0644);
 		io_fd->out_file = ft_strdup(file->value);
 		io_fd->append = false;
 	}
-	else if (redir->type == TK_APPEND)
+	else if (redir->type == TK_APPEND && !io_fd->err_redir)
 	{
+		if (access(file->value, F_OK))
+			io_fd->err_redir = false;
+		else if (access(file->value, W_OK))
+			io_fd->err_redir = true;
+		fd = open(file->value, O_CREAT | O_WRONLY | O_APPEND, 0644);
 		io_fd->out_file = ft_strdup(file->value);
 		io_fd->append = true;
 	}
 	else if (redir->type == TK_HEREDOC)
-		io_fd->heredoc = handle_heredoc(file, io_fd);
+		io_fd->heredoc = handle_heredoc(file, io_fd, &shell->exit_code);
 }
 
 char	**create_arg(t_token *start, t_token *end, int *i)
@@ -89,7 +111,7 @@ static inline bool	is_valid_pipe(t_token *s, t_token *e)
 	return (s && (s != e || s->type != TK_PIPE));
 }
 
-t_cmds	*create_cmd(t_token *start, t_token *end)
+t_cmds	*create_cmd(t_token *start, t_token *end, t_shell *shell)
 {
 	char	*cmd;
 	char	**arg;
@@ -111,7 +133,7 @@ t_cmds	*create_cmd(t_token *start, t_token *end)
 	{
 		if (start->type >= TK_REDIRECT_IN && start->type <= TK_HEREDOC)
 		{
-			handle_redirection(start, start->next, io_fd);
+			handle_redirection(start, start->next, io_fd, shell);
 			start = start->next;
 		}
 		else
@@ -128,7 +150,7 @@ t_cmds	*create_cmd(t_token *start, t_token *end)
 }
 
 
-t_cmds	*built_cmd(t_token	*token)
+t_cmds	*built_cmd(t_token	*token, t_shell *shell)
 {
 	t_cmds	*head;
 	t_cmds	*tail;
@@ -137,10 +159,11 @@ t_cmds	*built_cmd(t_token	*token)
 	new = NULL;
 	head = NULL;
 	tail = NULL;
+	while (token && !token->value)
+		token = token->next;
 	while (token)
 	{
-
-		new = create_cmd(token, get_token_end(token));
+		new = create_cmd(token, get_token_end(token), shell);
 		token = get_token_end(token);
 		if (!new)
 			return (NULL);

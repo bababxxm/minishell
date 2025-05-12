@@ -6,7 +6,7 @@
 /*   By: pkhienko42 <pkhienko42@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 00:55:17 by sklaokli          #+#    #+#             */
-/*   Updated: 2025/05/09 17:12:22 by pkhienko42       ###   ########.fr       */
+/*   Updated: 2025/05/12 16:33:50 by pkhienko42       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,18 +46,40 @@ int	errmsg(char *cmd, char *detail, char *err_msg, int err_nb)
 	return (err_nb);
 }
 
-// to do
-int	cmd_not_found(t_cmds *cmd, char *c, bool only_not_found)
+int	error_message(char *cmd, bool print)
 {
-	(void)c;
+	int	fd;
 
-	if ((!ft_strncmp(cmd->cmd, ".", 1) || !ft_strncmp(cmd->cmd, "/", 1)) && access(cmd->cmd, F_OK) == -1)
-		return (errmsg(cmd->cmd, NULL, "command not found", CMD_NOT_FOUND));
-	if (access(cmd->cmd, F_OK) == -1 && only_not_found)
-		return (errmsg(cmd->cmd, NULL, strerror(errno), CMD_NOT_FOUND));
-	if (is_dir(cmd->cmd) && only_not_found)
-		return (errmsg(cmd->cmd, NULL, "Is a directory", CMD_NOT_EXECUTABLE));
-	if (access(cmd->cmd, X_OK) == -1 && only_not_found)
-		return (errmsg(cmd->cmd, NULL, strerror(errno), CMD_NOT_EXECUTABLE));
+	fd = open(cmd, O_WRONLY);
+	if (print)
+	{
+		if (!ft_strchr(cmd, '/'))
+			return (errmsg(cmd, NULL, "command not found", CMD_NOT_FOUND));
+		else if (fd == -1 && !is_dir(cmd))
+			return (errmsg(cmd, NULL, "No such file or directory", CMD_NOT_FOUND));
+		else if (fd == -1 && is_dir(cmd))
+			return (errmsg(cmd, NULL, strerror(errno), CMD_NOT_EXECUTABLE));
+		else if (fd != -1 && !is_dir(cmd))
+		{
+			close(fd);
+			return (errmsg(cmd, NULL, "Permission denied", CMD_NOT_EXECUTABLE));
+		}
+	}
+	else
+	{
+		if (!ft_strchr(cmd, '/'))
+			return (CMD_NOT_FOUND);
+		else if (fd == -1 && !is_dir(cmd))
+			return (CMD_NOT_EXECUTABLE);
+		else if (fd == -1 && is_dir(cmd))
+			return (CMD_NOT_EXECUTABLE);
+		else if (fd != -1 && !is_dir(cmd))
+		{
+			close(fd);
+			return (CMD_NOT_EXECUTABLE);
+		}
+	}
+	if (fd > 0)
+		close(fd);
 	return (EXIT_SUCCESS);
 }
