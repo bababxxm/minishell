@@ -10,3 +10,10 @@ void	sighandler(int signum)
 		rl_redisplay();
 	}
 }
+
+void heredoc_sig_handler(int sig)
+{
+	(void)sig;
+	write(1, "\n", 1);
+	exit(SIGINT);
+}

@@ -6,7 +6,7 @@
 /*   By: pkhienko42 <pkhienko42@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 21:48:01 by sklaokli          #+#    #+#             */
-/*   Updated: 2025/05/12 13:59:31 by pkhienko42       ###   ########.fr       */
+/*   Updated: 2025/05/13 01:31:32 by pkhienko42       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,8 @@ int	main(int argc, char *argv[], char **env)
 	init_shell(&shell, env);
 	while (true)
 	{
-		// shell.input = readline(get_prompt(&shell));
-		shell.input = readline("minishell$ ");
+		shell.input = readline(get_prompt(&shell));
+		// shell.input = readline("minishell$ ");
 		if (!shell.input)
 			exit_shell(&shell);
 		execute_cmds(&shell);

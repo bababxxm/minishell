@@ -1,5 +1,7 @@
 #include "minishell.h"
 
+void	heredoc_sig_handler(int sig);
+
 char	**get_envp(t_env *env)
 {
 	char	**envp;
@@ -89,13 +91,6 @@ bool is_builtin(char *cmd)
         return (true);
         
     return (false);
-}
-
-void heredoc_sig_handler(int sig)
-{
-	(void)sig;
-	write(1, "\n", 1);
-	exit(SIGINT);
 }
 
 bool	is_dir(char *cmd)

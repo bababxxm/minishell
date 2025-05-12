@@ -68,8 +68,6 @@ int	setup_redirect(t_io_fd *io_fd)
 {
 	int		flags;
 
-	//fix check infile == null : case < $asdasdas
-	//fix check infile == '\0' : < '', < ""
 	if (io_fd->in_file)
 	{
 		io_fd->fd_in = open(io_fd->in_file, O_RDONLY);

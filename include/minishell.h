@@ -6,7 +6,7 @@
 /*   By: pkhienko42 <pkhienko42@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 18:22:50 by sklaokli          #+#    #+#             */
-/*   Updated: 2025/05/12 17:06:03 by pkhienko42       ###   ########.fr       */
+/*   Updated: 2025/05/13 01:21:37 by pkhienko42       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include <stdio.h>
 # include <fcntl.h>
 # include <errno.h>
+# include <limits.h>
 # include <unistd.h>
 # include <stdlib.h>
 # include <signal.h>
@@ -30,8 +31,8 @@
 # include "env.h"
 # include "lexer.h"
 # include "builtin.h"
-# include "command.h"
 # include "_signal.h"
+# include "command.h"
 
 # define B_YELLOW "\001\033[1;33m\002"
 # define B_GREEN "\001\033[1;32m\002"
