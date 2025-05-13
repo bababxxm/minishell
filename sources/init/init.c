@@ -1,5 +1,7 @@
 #include "minishell.h"
 
+volatile sig_atomic_t g_children_code = 0;
+
 void	init_shell(t_shell *shell, char **env)
 {
 	shell->input = NULL;

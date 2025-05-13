@@ -6,7 +6,7 @@
 /*   By: pkhienko42 <pkhienko42@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 18:22:50 by sklaokli          #+#    #+#             */
-/*   Updated: 2025/05/13 01:21:37 by pkhienko42       ###   ########.fr       */
+/*   Updated: 2025/05/13 15:57:20 by pkhienko42       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,8 @@
 # ifndef PATH_MAX
 #  define PATH_MAX 4096
 # endif
+
+extern volatile sig_atomic_t g_children_code;
 
 typedef enum e_exit_code
 {

@@ -106,6 +106,7 @@ int	execute(t_shell *shell)
 	last_pid = -1;
 	cmd = shell->cmds;
 	ret = EXIT_SUCCESS;
+	g_children_code = 1;
 	while (cmd)
 	{
 		backup_io(cmd);
@@ -132,7 +133,6 @@ int	execute(t_shell *shell)
 		{
 			if (shell->pid == last_pid)
 			{
-				//^C exitcoce ค้าง
 				if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
 					ret = 128 + WTERMSIG(status);
 				else if (WIFEXITED(status))
@@ -140,6 +140,7 @@ int	execute(t_shell *shell)
 			}
 			shell->pid = wait(&status);
 		}
+	g_children_code = 0;
 	}
 	return (ret);
 }

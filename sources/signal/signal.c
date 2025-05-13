@@ -2,7 +2,7 @@
 
 void	sighandler(int signum)
 {
-	if (signum == SIGINT)
+	if (signum == SIGINT && g_children_code == 0)
 	{
 		write(STDOUT_FILENO, "\n", 1);
 		rl_on_new_line();
