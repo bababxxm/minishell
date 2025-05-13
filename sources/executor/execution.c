@@ -48,11 +48,15 @@ static pid_t	execute_cmd(t_shell *shell, t_cmds *cmd, char *c)
 	int		ret;
 
 	ret = EXIT_SUCCESS;
+	set_sigint(&shell->sigint, SIG_IGN);
+	set_sigquit(&shell->sigquit, SIG_IGN);
 	shell->pid = fork();
 	if (shell->pid == -1)
 		exit_error(shell, errmsg("Fork", NULL, strerror(errno), 1));
 	if (!shell->pid)
 	{
+		set_sigint(&shell->sigint, &sighandler);
+		set_sigquit(&shell->sigquit, &sigchild);
 		setup_pipe(cmd);
 		ret = setup_redirect(cmd->io_fd);
 		if (ret)
@@ -73,10 +77,15 @@ static pid_t	execute_cmd(t_shell *shell, t_cmds *cmd, char *c)
 static int	get_children(t_shell *shell, pid_t last_pid, int ret)
 {
 	int		status;
+	bool	is_heredoc;
+	t_cmds	*cmd;
 
+	is_heredoc = false;
 	if (last_pid != -1)
 	{
 		shell->pid = wait(&status);
+		set_sigint(&shell->sigint, &sighandler);
+		set_sigquit(&shell->sigquit, &sighandler);
 		while (shell->pid > 0)
 		{
 			if (shell->pid == last_pid)
@@ -89,7 +98,16 @@ static int	get_children(t_shell *shell, pid_t last_pid, int ret)
 			shell->pid = wait(&status);
 		}
 	}
+	cmd = shell->cmds;
+	while (cmd)
+	{
+		if (cmd->io_fd->heredoc)
+			is_heredoc = true;
+		cmd = cmd->next;
+	}
 	g_childern_code = 0;
+	if (shell->exit_code == 130 && is_heredoc)
+		return (130);
 	return (ret);
 }
 

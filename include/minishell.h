@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pkhienko42 <pkhienko42@student.42.fr>      +#+  +:+       +#+        */
+/*   By: sklaokli <sklaokli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 18:22:50 by sklaokli          #+#    #+#             */
-/*   Updated: 2025/05/13 23:19:25 by pkhienko42       ###   ########.fr       */
+/*   Updated: 2025/05/14 00:55:16 by sklaokli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@
 # endif
 
 extern volatile sig_atomic_t	g_childern_code;
+typedef	struct sigaction		t_sa;
 
 typedef enum e_exit_code
 {
@@ -71,6 +72,8 @@ typedef struct s_shell
 	char		*home;
 	char		*oldpwd;
 	char		*pwd;
+	t_sa		sigint;
+	t_sa		sigquit;
 	t_env		*env;
 	t_token		*token;
 	t_cmds		*cmds;
@@ -90,5 +93,9 @@ char    *get_prompt(t_shell *shell);
 char	*strappend(char *str, char *append);
 
 int		ft_strlen_to_c(char *str, char c);
+
+void	sigchild(int sig);
+void	set_sigint(t_sa *sigint, void *ft);
+void	set_sigquit(t_sa *sigquit, void *ft);
 
 #endif

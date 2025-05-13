@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-void	close_backup(t_cmds *cmd)
+void	close_fds(t_cmds *cmd)
 {
 	while (cmd)
 	{
@@ -8,6 +8,8 @@ void	close_backup(t_cmds *cmd)
 			close(cmd->io_fd->stdin_backup);
 		if (cmd->io_fd->stdout_backup != -1)
 			close(cmd->io_fd->stdout_backup);
+		if (cmd->io_fd->append)
+			close(cmd->io_fd->fd_in);
 		cmd = cmd->next;
 	}
 }

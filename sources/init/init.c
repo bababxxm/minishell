@@ -15,6 +15,8 @@ void	init_shell(t_shell *shell, char **env)
 	shell->pid = -1;
 	increment_shlvl(shell->env, "SHLVL");
 	shell->sort_key = update_list_key(shell->env);
-	signal(SIGINT, sighandler);
-	signal(SIGQUIT, SIG_IGN);
+	ft_memset(&shell->sigint, 0, sizeof(shell->sigint));
+	set_sigint(&shell->sigint, &sighandler);
+	ft_memset(&shell->sigquit, 0, sizeof(shell->sigquit));
+	set_sigquit(&shell->sigquit, SIG_IGN);
 }

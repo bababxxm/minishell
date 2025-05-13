@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pkhienko42 <pkhienko42@student.42.fr>      +#+  +:+       +#+        */
+/*   By: sklaokli <sklaokli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 22:50:03 by sklaokli          #+#    #+#             */
-/*   Updated: 2025/05/13 17:41:18 by pkhienko42       ###   ########.fr       */
+/*   Updated: 2025/05/14 02:13:49 by sklaokli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ t_token	*tokenizer(t_shell *shell)
 			i = handle_unquotes(i, shell, index, &token);
 		index = add_subtoken_index(i, shell->input, index);
 	}
+	token = merge_subtokens(token);
 	if (!validate_quotes(shell->input) || !validate_tokens(token))
 		return (NULL);
 	return (token);

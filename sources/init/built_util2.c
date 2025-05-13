@@ -16,7 +16,7 @@ t_token	*get_token_end(t_token *token)
 	return (cur);
 }
 
-void	handle_redirection(t_token *redir, t_token *file, t_io_fd *io_fd)
+void	handle_redirection(t_shell *shell, t_token *redir, t_token *file, t_io_fd *io_fd)
 {
 	if (!file || file->type != TK_WORD)
 	{
@@ -30,5 +30,5 @@ void	handle_redirection(t_token *redir, t_token *file, t_io_fd *io_fd)
 	else if (redir->type == TK_APPEND && !io_fd->err_redir)
 		redir_append(file, io_fd);
 	else if (redir->type == TK_HEREDOC)
-		io_fd->heredoc = handle_heredoc(file, io_fd);
+		io_fd->heredoc = handle_heredoc(shell, file, io_fd);
 }

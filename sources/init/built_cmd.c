@@ -40,7 +40,7 @@ t_cmds	*create_cmd(t_token *start, t_token *end, t_shell *shell)
 	{
 		if (start->type >= TK_REDIRECT_IN && start->type <= TK_HEREDOC)
 		{
-			handle_redirection(start, start->next, io_fd);
+			handle_redirection(shell, start, start->next, io_fd);
 			start = start->next;
 		}
 		else
