@@ -6,7 +6,7 @@
 /*   By: pkhienko42 <pkhienko42@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 23:04:29 by sklaokli          #+#    #+#             */
-/*   Updated: 2025/05/09 20:18:15 by pkhienko42       ###   ########.fr       */
+/*   Updated: 2025/05/13 17:41:44 by pkhienko42       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,19 @@
 
 void	syntax_errmsg(int syntax_errno, char *text)
 {
+	char	*errmsg;
+
+	errmsg = NULL;
 	if (syntax_errno == UNMATCHED_QUOTE)
-		printf("minishell: syntax: unmatched quotes\n");
-	else if (syntax_errno == ERROR_TOKEN && text)
-		printf("minishell: syntax: error near unexpected token '%s'\n", text);
+		errmsg = "unmatched quotes";
+	else if (syntax_errno == ERROR_TOKEN)
+		errmsg = strappend("error near unexpected token ", text);
+	else if (syntax_errno == AMBIGUOUS)
+		errmsg = strappend(text, ": ambiguous redirect");
+	else if (syntax_errno == OVERFLOW)
+		errmsg = "too many arguments";
+	errmsg = strappend("minishell: syntax: ", errmsg);
+	ft_putendl_fd(errmsg, STDERR_FILENO);
 }
 
 bool	validate_quotes(char *str)
@@ -53,30 +62,43 @@ bool	is_operator_token(t_token *token)
 		|| token->type == TK_APPEND);
 }
 
+bool	check_tokens(t_token *bef, t_token *cur, t_token *aft)
+{
+	if (!bef && cur->type == TK_PIPE)
+    	return (syntax_errmsg(ERROR_TOKEN, "'|'"), false);
+    else if (cur->type == TK_PIPE && !aft)
+        return (syntax_errmsg(ERROR_TOKEN, "'|'"), false);
+    else if (is_operator_token(cur) && !aft)
+        return (syntax_errmsg(ERROR_TOKEN, "'newline'"), false);
+    else if (is_operator_token(cur) && cur->type != TK_PIPE
+        && is_operator_token(aft))
+        return (syntax_errmsg(ERROR_TOKEN, aft->value), false);
+	else if (is_operator_token(cur) && cur->type != TK_HEREDOC
+		&& !aft->value)
+		return (syntax_errmsg(AMBIGUOUS, aft->raw), false);
+	else
+		return (true);
+}
+
 bool    validate_tokens(t_token *token)
 {
-    t_token    *before;
-    t_token    *after;
+    t_token    *bef;
+    t_token    *aft;
 
     if (!token)
         return (false);
-    before = NULL;
-    after = token->next;
+	else if (ft_lstsize((t_list *)token) > ARGV_MAX)
+		return (syntax_errmsg(OVERFLOW, NULL), false);
+    bef = NULL;
+    aft = token->next;
     while (token)
     {
-        if (!before && token->type == TK_PIPE)
-            return (syntax_errmsg(ERROR_TOKEN, "|"), false);
-        else if (token->type == TK_PIPE && !after)
-            return (syntax_errmsg(ERROR_TOKEN, "|"), false);
-        else if (is_operator_token(token) && !after)
-            return (syntax_errmsg(ERROR_TOKEN, "newline"), false);
-        else if (is_operator_token(token) && token->type != TK_PIPE
-            && is_operator_token(after))
-            return (syntax_errmsg(ERROR_TOKEN, after->value), false);
-        before = token;
+		if (!check_tokens(bef, token, aft))
+			return (false);
+        bef = token;
         token = token->next;
         if (token)
-            after = token->next;
+            aft = token->next;
     }
     return (true);
 }

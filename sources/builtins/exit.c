@@ -6,7 +6,7 @@
 /*   By: pkhienko42 <pkhienko42@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 00:53:24 by sklaokli          #+#    #+#             */
-/*   Updated: 2025/05/13 02:20:04 by pkhienko42       ###   ########.fr       */
+/*   Updated: 2025/05/13 20:00:20 by pkhienko42       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ static long long	ft_atol(const char *str)
 	return (((long long)(res * sign)) % 256);
 }
 
-bool	is_number(char *str)
+static bool	is_number(char *str)
 {
 	int	i;
 
@@ -72,7 +72,6 @@ int	ft_exit(t_shell *shell, char **av)
 
 	cnt = -1;
 	while (av[++cnt]);
-	printf("exit\n");
 	shell->exit_code = ft_atol(av[1]);
 	if (cnt > 1 && (!is_number(av[1]) || av[1][0] =='\0'))
 		shell->exit_code = errmsg(av[0], av[1], "numeric argument required", 2);

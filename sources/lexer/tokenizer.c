@@ -6,17 +6,18 @@
 /*   By: pkhienko42 <pkhienko42@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 22:50:03 by sklaokli          #+#    #+#             */
-/*   Updated: 2025/05/11 23:25:41 by pkhienko42       ###   ########.fr       */
+/*   Updated: 2025/05/13 17:41:18 by pkhienko42       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_token	*new_token(int index, char *value, int type)
+t_token	*new_token(int index, char *raw, char *value, int type)
 {
 	t_token	*new;
 
 	new = safealloc(1, sizeof(t_token));
+	new->raw = raw;
 	new->value = value;
 	new->index = index;
 	new->type = type;
@@ -24,11 +25,11 @@ t_token	*new_token(int index, char *value, int type)
 	return (new);
 }
 
-void	add_token(int index, char *value, short type, t_token **token)
+void	add_token(int index, char **str, short type, t_token **token)
 {
 	t_token	*new;
 
-	new = new_token(index, value, type);
+	new = new_token(index, str[0], str[1] , type);
 	ft_lstadd_back((t_list **)token, (t_list *)new);
 }
 
@@ -54,7 +55,6 @@ t_token	*tokenizer(t_shell *shell)
 			i = handle_unquotes(i, shell, index, &token);
 		index = add_subtoken_index(i, shell->input, index);
 	}
-	token = merge_subtokens(token);
 	if (!validate_quotes(shell->input) || !validate_tokens(token))
 		return (NULL);
 	return (token);

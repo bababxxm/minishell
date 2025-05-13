@@ -1,8 +1,8 @@
 #include "minishell.h"
 
-void	sighandler(int signum)
+void	sighandler(int sig)
 {
-	if (signum == SIGINT && g_children_code == 0)
+	if (sig == SIGINT && !g_childern_code)
 	{
 		write(STDOUT_FILENO, "\n", 1);
 		rl_on_new_line();
@@ -14,6 +14,12 @@ void	sighandler(int signum)
 void heredoc_sig_handler(int sig)
 {
 	(void)sig;
-	write(1, "\n", 1);
-	exit(SIGINT);
+	write(STDOUT_FILENO, "\n", 1);
+}
+
+void	sigchild(int sig)
+{
+	(void)sig;
+	if (g_childern_code && sig == SIGINT)
+		write(STDOUT_FILENO, "\n", 1);
 }

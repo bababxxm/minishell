@@ -6,7 +6,7 @@
 /*   By: pkhienko42 <pkhienko42@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 18:21:06 by sklaokli          #+#    #+#             */
-/*   Updated: 2025/05/07 23:50:26 by pkhienko42       ###   ########.fr       */
+/*   Updated: 2025/05/13 17:41:07 by pkhienko42       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ void	print_tokens(t_token *token)
 			printf("option");
 		else if (token->type == TK_WORD)
 			printf("word");
-		printf("\t| %d | %s\n", token->index, token->value);
+		printf("\t| %d | %s | %s\n", token->index, token->raw, token->value);
 		token = token->next;
 	}
 	printf("-----------------------------\n");

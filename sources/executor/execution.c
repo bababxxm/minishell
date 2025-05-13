@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-int	execute_builtin(t_shell *shell, t_cmds *cmd)
+static int	execute_builtin(t_shell *shell, t_cmds *cmd)
 {
 	int		ret;
 
@@ -27,13 +27,8 @@ int	execute_builtin(t_shell *shell, t_cmds *cmd)
 	return (ret);
 }
 
-void	run_cmd(t_shell *shell, t_cmds* cmd, int *ret)
+static void	run_cmd(t_shell *shell, t_cmds* cmd, char *path, int *ret)
 {
-	char	*path;
-	int		tmp;
-
-	(void)tmp;
-	path = search_cmd(cmd->cmd, shell, &tmp);
 	if (execve(path, cmd->arg, get_envp(shell->env)) == -1 && !*ret)
 	{
 		if (!cmd->cmd || cmd->cmd[0] == '\0')
@@ -48,31 +43,17 @@ void	run_cmd(t_shell *shell, t_cmds* cmd, int *ret)
 	}
 }
 
-pid_t	execute_cmd(t_shell *shell, t_cmds *cmd, char *c)
+static pid_t	execute_cmd(t_shell *shell, t_cmds *cmd, char *c)
 {
 	int		ret;
 
 	ret = EXIT_SUCCESS;
 	shell->pid = fork();
 	if (shell->pid == -1)
-	{
-		errmsg("Fork", NULL, strerror(errno), EXIT_FAILURE);
-		exit(errno);
-	}
+		exit_error(shell, errmsg("Fork", NULL, strerror(errno), 1));
 	if (!shell->pid)
 	{
-		if (cmd->prev && cmd->prev->pipe_fd)
-		{
-			dup2(cmd->prev->pipe_fd[0], STDIN_FILENO);
-			close(cmd->prev->pipe_fd[0]);
-			close(cmd->prev->pipe_fd[1]);
-		}
-		if (cmd->pipe_fd)
-		{
-			dup2(cmd->pipe_fd[1], STDOUT_FILENO);
-			close(cmd->pipe_fd[0]);
-			close(cmd->pipe_fd[1]);
-		}
+		setup_pipe(cmd);
 		ret = setup_redirect(cmd->io_fd);
 		if (ret)
 			exit(ret);
@@ -80,52 +61,19 @@ pid_t	execute_cmd(t_shell *shell, t_cmds *cmd, char *c)
 			exit(execute_builtin(shell, cmd));
 		else
 		{
-			run_cmd(shell, cmd, &ret);
+			run_cmd(shell, cmd, c, &ret);
 			exit(ret);
 		}
 	}
 	else
-	{
-		if (cmd->prev && cmd->prev->pipe_fd)
-		{
-			close(cmd->prev->pipe_fd[0]);
-			close(cmd->prev->pipe_fd[1]);
-		}
-	}
+		close_pipe(cmd);
 	return (shell->pid);
 }
 
-int	execute(t_shell *shell)
+static int	get_children(t_shell *shell, pid_t last_pid, int ret)
 {
-	t_cmds	*cmd;
-	char	*path;
-	int		ret;
 	int		status;
-	pid_t	last_pid;
 
-	last_pid = -1;
-	cmd = shell->cmds;
-	ret = EXIT_SUCCESS;
-	g_children_code = 1;
-	while (cmd)
-	{
-		backup_io(cmd);
-		if (is_builtin(cmd->cmd) && !cmd->next && !cmd->prev)
-		{
-			
-			ret = setup_redirect(cmd->io_fd);
-			if (!ret)
-				ret = execute_builtin(shell, cmd);
-		}
-		else
-		{
-			path = search_cmd(cmd->cmd, shell, &ret);
-			if (!ret)
-				last_pid = execute_cmd(shell, cmd, path);
-		}
-		restore_io(cmd->io_fd);
-		cmd = cmd->next;
-	}
 	if (last_pid != -1)
 	{
 		shell->pid = wait(&status);
@@ -140,7 +88,35 @@ int	execute(t_shell *shell)
 			}
 			shell->pid = wait(&status);
 		}
-	g_children_code = 0;
 	}
+	g_childern_code = 0;
 	return (ret);
+}
+
+int	execute(t_shell *shell, t_cmds *cmd, pid_t last_pid)
+{
+	char	*path;
+	int		ret;
+
+	ret = EXIT_SUCCESS;
+	g_childern_code = 1;
+	while (cmd)
+	{
+		backup_io(cmd);
+		if (is_builtin(cmd->cmd) && !cmd->next && !cmd->prev)
+		{
+			ret = setup_redirect(cmd->io_fd);
+			if (!ret)
+				ret = execute_builtin(shell, cmd);
+		}
+		else
+		{
+			path = search_cmd(cmd->cmd, shell, &ret);
+			if (!ret)
+				last_pid = execute_cmd(shell, cmd, path);
+		}
+		restore_io(cmd->io_fd);
+		cmd = cmd->next;
+	}
+	return (get_children(shell, last_pid, ret));
 }

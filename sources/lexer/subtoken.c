@@ -6,11 +6,13 @@
 /*   By: pkhienko42 <pkhienko42@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 18:21:08 by sklaokli          #+#    #+#             */
-/*   Updated: 2025/05/11 23:25:14 by pkhienko42       ###   ########.fr       */
+/*   Updated: 2025/05/13 17:41:37 by pkhienko42       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+char	**set_data(char *raw, char *value);
 
 int	add_subtoken_index(int i, char *str, int index)
 {
@@ -36,42 +38,26 @@ int	token_strlen(t_token *subtoken, int index)
 	return (len);
 }
 
-void	token_strjoin(t_token **token, t_token *subtoken, int len, int index)
+bool	token_strjoin(t_token **token, t_token *subtoken, int index)
 {
-	int		i;
-	int		j;
 	int		type;
-	char	*join;
+	char	*raw;
+	char	*value;
 
-	if (!subtoken->value)
-	{
-		add_token(index, NULL, TK_WORD, token);
-		return ;
-	}
-	if (!subtoken->value[0])
-	{
-		add_token(index, ft_strdup(""), TK_WORD, token);
-		return ;
-	}
-	join = safealloc(len + 1, sizeof(char));
-	if (!join)
-		return ;
-	i = 0;
+	raw = "";
+	value = "";
 	type = subtoken->type;
 	while (subtoken && subtoken->index == index)
 	{
-		j = 0;
-		while (subtoken->value && subtoken->value[j])
-			join[i++] = subtoken->value[j++];
+		raw = strappend(raw, subtoken->raw);
+		value = strappend(value, subtoken->value);
 		subtoken = subtoken->next;
 	}
-	join[i] = '\0';
-	add_token(index, join, type, token);
+	return (add_token(index, set_data(raw, value), type, token), true);
 }
 
 t_token	*merge_subtokens(t_token *subtoken)
 {
-	int		len;
 	int		index;
 	t_token	*token;
 
@@ -83,8 +69,7 @@ t_token	*merge_subtokens(t_token *subtoken)
 			subtoken = subtoken->next;
 		if (!subtoken)
 			break ;
-		len = token_strlen(subtoken, index);
-		token_strjoin(&token, subtoken, len, index++);
+		token_strjoin(&token, subtoken, index++);
 	}
 	return (token);
 }

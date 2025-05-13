@@ -6,7 +6,7 @@
 /*   By: pkhienko42 <pkhienko42@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 02:04:03 by sklaokli          #+#    #+#             */
-/*   Updated: 2025/05/12 23:30:35 by pkhienko42       ###   ########.fr       */
+/*   Updated: 2025/05/13 23:18:54 by pkhienko42       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,23 +37,36 @@ typedef struct s_cmds
 	struct s_cmds	*next;
 }	t_cmds;
 
-void	close_fd(t_cmds *cmd);
 void	backup_io(t_cmds *cmd);
+void	close_pipe(t_cmds *cmd);
+void	setup_pipe(t_cmds *cmd);
+void	close_backup(t_cmds *cmd);
 void	restore_io(t_io_fd *io_fd);
 void	redirect_io(t_io_fd *io_fd);
+void	dup_close(int in_out, int fd);
+void	set_flag(t_io_fd *io_fd, int *flags);
+void	redir_in(t_token *file, t_io_fd *io_fd);
+void	redir_out(t_token *file, t_io_fd *io_fd);
+void	redir_append(t_token *file, t_io_fd *io_fd);
+void	handle_redirection(t_token *redir, t_token *file, t_io_fd *io_fd);
 
 bool	is_dir(char *cmd);
 bool	is_builtin(char *cmd);
-bool	handle_heredoc(t_token *limit, t_io_fd *io_fd, int *exit_code);
+bool	handle_heredoc(t_token *limit, t_io_fd *io_fde);
 
 char	**get_envp(t_env *env);
 char	*search_cmd(char *cmd, t_shell *shell, int *ret);
 
-int		*create_pipe_fd();
-int		execute(t_shell *shell);
 int		setup_redirect(t_io_fd *io_fd);
+int		*create_pipe_fd(t_shell *shell);
 int		error_message(char *cmd, bool is_cmd);
+int		execute(t_shell *shell, t_cmds *cmd, pid_t last_pid);
+
+t_io_fd	*new_io_fd();
+
+t_token	*get_token_end(t_token *token);
 
 t_cmds	*built_cmd(t_token	*token, t_shell *shell);
+t_cmds	*new_cmd_full(char *cmd, char **arg, int *pipe_fd, t_io_fd *io_fd);
 
 #endif

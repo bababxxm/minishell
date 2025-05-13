@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-void	close_fd(t_cmds *cmd)
+void	close_backup(t_cmds *cmd)
 {
 	while (cmd)
 	{
@@ -12,13 +12,13 @@ void	close_fd(t_cmds *cmd)
 	}
 }
 
-int	*create_pipe_fd()
+int	*create_pipe_fd(t_shell *shell)
 {
 	int	*pipe_fd;
 
 	pipe_fd = safealloc(2, sizeof(int));
 	if (pipe(pipe_fd) == -1)
-		perror("Pipe failed");
+		exit_error(shell, errmsg("Pipe", NULL, strerror(errno), 1));
 	return (pipe_fd);
 }
 
@@ -73,29 +73,20 @@ int	setup_redirect(t_io_fd *io_fd)
 		io_fd->fd_in = open(io_fd->in_file, O_RDONLY);
 		if (io_fd->fd_in < 0)
 			return (errmsg(io_fd->in_file, NULL, "No such file or directory", 1));
-		dup2(io_fd->fd_in, STDIN_FILENO);
-		close(io_fd->fd_in);
+		dup_close(io_fd->fd_in, STDIN_FILENO);
 	}
 	else if (io_fd->fd_in != -1 && io_fd->heredoc)
-	{
-		dup2(io_fd->fd_in, STDIN_FILENO);
-		close(io_fd->fd_in);
-	}
+		dup_close(io_fd->fd_in, STDIN_FILENO);
 	if (io_fd->out_file)
 	{
 		if (access(io_fd->out_file, F_OK));
 		else if (access(io_fd->out_file, W_OK))
 			return (errmsg(io_fd->out_file, NULL, "Permission denied", 1));
-		flags = O_WRONLY | O_CREAT;
-		if (io_fd->append)
-			flags |= O_APPEND;
-		else
-			flags |= O_TRUNC;
+		set_flag(io_fd, &flags);
 		io_fd->fd_out = open(io_fd->out_file, flags, 0644);
 		if (io_fd->fd_out < 0)
 			return (errmsg(io_fd->out_file, NULL, "No such file or directory", 1));
-		dup2(io_fd->fd_out, STDOUT_FILENO);
-		close(io_fd->fd_out);
+		dup_close(io_fd->fd_out, STDOUT_FILENO);
 	}
 	return (0);
 }

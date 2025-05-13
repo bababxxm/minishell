@@ -6,7 +6,7 @@
 #    By: pkhienko42 <pkhienko42@student.42.fr>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/18 19:44:55 by sklaokli          #+#    #+#              #
-#    Updated: 2025/05/12 17:02:46 by pkhienko42       ###   ########.fr        #
+#    Updated: 2025/05/13 23:23:42 by pkhienko42       ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,6 +23,8 @@ FILES		:=	\
 				env/utils.c \
 				init/init.c \
 				init/built_cmd.c \
+				init/built_util.c \
+				init/built_util2.c \
 				lexer/tokenizer.c \
 				lexer/syntax.c \
 				lexer/expand.c \
@@ -39,8 +41,11 @@ FILES		:=	\
 				builtins/export_util.c \
 				executor/execution.c \
 				executor/execution_util.c \
+				executor/heredoc.c \
 				io_file/io_file.c \
-				error_msg/error.c \
+				io_file/io_util.c \
+				error/error.c \
+				error/exit_error.c \
 				signal/signal.c \
 				utils/utils.c
 

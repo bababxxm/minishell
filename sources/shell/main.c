@@ -6,11 +6,13 @@
 /*   By: pkhienko42 <pkhienko42@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 21:48:01 by sklaokli          #+#    #+#             */
-/*   Updated: 2025/05/13 15:58:09 by pkhienko42       ###   ########.fr       */
+/*   Updated: 2025/05/13 23:19:03 by pkhienko42       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+volatile sig_atomic_t	g_childern_code = 0;
 
 int	main(int argc, char *argv[], char **env)
 {
@@ -58,12 +60,13 @@ void	execute_cmds(t_shell *shell)
 	if (!shell->token)
 		return ;
 	shell->cmds = built_cmd(shell->token, shell);
-	shell->exit_code = execute(shell);
+	shell->exit_code = execute(shell, shell->cmds, -1);
 }
 
 void	exit_shell(t_shell *shell)
 {
-	close_fd(shell->cmds);
+	ft_putendl_fd("exit", EXIT_FAILURE);
+	close_backup(shell->cmds);
 	free_safealloc();
 	rl_clear_history();
 	exit(shell->exit_code);

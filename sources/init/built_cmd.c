@@ -1,98 +1,6 @@
 #include "minishell.h"
 
-static t_io_fd	*new_io_fd()
-{
-	t_io_fd	*io_fd;
-
-	io_fd = safealloc(1, sizeof(t_io_fd));
-	io_fd->in_file = NULL;
-	io_fd->out_file = NULL;
-	io_fd->heredoc = false;
-	io_fd->append = false;
-	io_fd->err_redir = false;
-	io_fd->fd_in = -1;
-	io_fd->fd_out = -1;
-	io_fd->stdin_backup = -1;
-	io_fd->stdout_backup = -1;
-	return (io_fd);
-}
-
-t_cmds	*new_cmd_full(char *cmd, char **arg, int *pipe_fd, t_io_fd *io_fd)
-{
-	t_cmds	*command;
-
-	command = safealloc(1, sizeof(t_cmds));
-	command->cmd = cmd;
-	command->arg = arg;
-	command->pipe_fd = pipe_fd;
-	command->io_fd = io_fd;
-	command->prev = NULL;
-	command->next = NULL;
-	return (command);
-}
-
-t_token	*get_token_end(t_token *token)
-{
-	t_token	*cur;
-
-	cur = token;
-	while (cur)
-	{
-		if (cur->type == TK_PIPE)
-			break ;
-		if (!cur->next)
-			break ;
-		cur = cur->next;
-	}
-	return (cur);
-}
-
-void	handle_redirection(t_token *redir, t_token *file, t_io_fd *io_fd, t_shell *shell)
-{
-	int	fd;
-
-	if (!file || file->type != TK_WORD)
-	{
-		errmsg(redir->value, NULL, "missing file for redirection", 1);
-		return ;
-	}
-	if (redir->type == TK_REDIRECT_IN && !io_fd->err_redir)
-	{
-		fd = open(file->value, O_WRONLY);
-		if (fd == -1)
-		{
-			io_fd->in_file = ft_strdup(file->value);
-			io_fd->err_redir = true;
-			return ;
-		}
-		io_fd->in_file = ft_strdup(file->value);
-		close(fd);
-	}
-	else if (redir->type == TK_REDIRECT_OUT && !io_fd->err_redir)
-	{
-		if (access(file->value, F_OK))
-			io_fd->err_redir = false;
-		else if (access(file->value, W_OK))
-			io_fd->err_redir = true;
-		fd = open(file->value, O_CREAT | O_WRONLY | O_TRUNC, 0644);
-		io_fd->out_file = ft_strdup(file->value);
-		io_fd->append = false;
-	}
-	else if (redir->type == TK_APPEND && !io_fd->err_redir)
-	{
-		if (access(file->value, F_OK))
-			io_fd->err_redir = false;
-		else if (access(file->value, W_OK))
-			io_fd->err_redir = true;
-		fd = open(file->value, O_CREAT | O_WRONLY | O_APPEND, 0644);
-		io_fd->out_file = ft_strdup(file->value);
-		io_fd->append = true;
-	}
-	else if (redir->type == TK_HEREDOC)
-		io_fd->heredoc = handle_heredoc(file, io_fd, &shell->exit_code);
-}
-
-char	**create_arg(t_token *start, t_token *end, int *i)
+static char	**create_arg(t_token *start, t_token *end, int *i)
 {
 	char	**arg;
 	
@@ -104,7 +12,6 @@ char	**create_arg(t_token *start, t_token *end, int *i)
 	arg = safealloc(*i + 1, sizeof(char *));
 	return (arg);
 }
-
 
 static inline bool	is_valid_pipe(t_token *s, t_token *e)
 {
@@ -124,7 +31,7 @@ t_cmds	*create_cmd(t_token *start, t_token *end, t_shell *shell)
 	e = 0;
 	cmd = NULL;
 	if (end && end->type == TK_PIPE)
-		pipe_fd = create_pipe_fd();
+		pipe_fd = create_pipe_fd(shell);
 	else
 		pipe_fd = NULL;
 	io_fd = new_io_fd();
@@ -133,7 +40,7 @@ t_cmds	*create_cmd(t_token *start, t_token *end, t_shell *shell)
 	{
 		if (start->type >= TK_REDIRECT_IN && start->type <= TK_HEREDOC)
 		{
-			handle_redirection(start, start->next, io_fd, shell);
+			handle_redirection(start, start->next, io_fd);
 			start = start->next;
 		}
 		else
@@ -148,7 +55,6 @@ t_cmds	*create_cmd(t_token *start, t_token *end, t_shell *shell)
 	arg[s] = NULL;
 	return (new_cmd_full(cmd, arg, pipe_fd, io_fd));
 }
-
 
 t_cmds	*built_cmd(t_token	*token, t_shell *shell)
 {

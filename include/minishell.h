@@ -6,7 +6,7 @@
 /*   By: pkhienko42 <pkhienko42@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 18:22:50 by sklaokli          #+#    #+#             */
-/*   Updated: 2025/05/13 15:57:20 by pkhienko42       ###   ########.fr       */
+/*   Updated: 2025/05/13 23:19:25 by pkhienko42       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,11 @@
 #  define PATH_MAX 4096
 # endif
 
-extern volatile sig_atomic_t g_children_code;
+# ifndef ARGV_MAX
+#  define ARGV_MAX 1024
+# endif
+
+extern volatile sig_atomic_t	g_childern_code;
 
 typedef enum e_exit_code
 {
@@ -74,18 +78,17 @@ typedef struct s_shell
 	int			exit_code;			
 }	t_shell;
 
-void	init_shell(t_shell *shell, char **env);
-void	increment_shlvl(t_env *env, char *key);
-void	execute_cmds(t_shell *shell);
-void	exit_shell(t_shell *shell);
 void	sighandler(int signum);
+void	exit_shell(t_shell *shell);
+void	execute_cmds(t_shell *shell);
+void	increment_shlvl(t_env *env, char *key);
+void	init_shell(t_shell *shell, char **env);
+void	exit_error(t_shell *shell, int err_nb);
+void	increment_shlvl(t_env *env, char *key);
 
-void	*safe_malloc(size_t	size);
 char    *get_prompt(t_shell *shell);
 char	*strappend(char *str, char *append);
-int		ft_strlen_to_c(char *str, char c);
-void	increment_shlvl(t_env *env, char *key);
 
-void	clear_shell();
+int		ft_strlen_to_c(char *str, char c);
 
 #endif
