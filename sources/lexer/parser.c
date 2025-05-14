@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sklaokli <sklaokli@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pkhienko42 <pkhienko42@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 23:04:29 by sklaokli          #+#    #+#             */
-/*   Updated: 2025/05/14 04:15:41 by sklaokli         ###   ########.fr       */
+/*   Updated: 2025/05/14 21:05:58 by pkhienko42       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	syntax_errmsg(int syntax_errno, char *text)
 		errmsg = "unmatched quotes";
 	else if (syntax_errno == ERROR_TOKEN)
 	{
-		errmsg = strappend("error near unexpected token", text);
+		errmsg = strappend("error near unexpected token '", text);
 		errmsg = strappend(errmsg, "'");
 	}
 	else if (syntax_errno == AMBIGUOUS)
@@ -65,22 +65,64 @@ bool	is_operator_token(t_token *token)
 		|| token->type == TK_APPEND);
 }
 
-int	check_tokens(t_token *bef, t_token *cur, t_token *aft)
+bool	check_tokens_3(t_shell *shell, t_token *bef, t_token *cur, t_token *aft)
+{
+	(void)bef;
+	if (is_operator_token(cur) && cur->type != TK_PIPE
+        && is_operator_token(aft))
+	{
+		shell->exit_code = 2;
+		return (syntax_errmsg(ERROR_TOKEN, aft->value), false);
+	}
+	else if (is_operator_token(cur) && cur->type != TK_HEREDOC
+		&& cur->type != TK_PIPE && !aft->raw)
+	{
+		shell->exit_code = 1;
+		return (syntax_errmsg(ERROR_TOKEN, aft->raw), false);
+	}
+	else
+		return (true);
+}
+
+bool	check_tokens_2(t_shell *shell, t_token *bef, t_token *cur, t_token *aft)
 {
 	if (!bef && cur->type == TK_PIPE)
-    	return (syntax_errmsg(ERROR_TOKEN, "|"), 2);
+	{
+		shell->exit_code = 2;
+		return (syntax_errmsg(ERROR_TOKEN, "|"), false);
+	}
     else if (cur->type == TK_PIPE && !aft)
-        return (syntax_errmsg(ERROR_TOKEN, "|"), 2);
+	{
+		shell->exit_code = 2;
+		return (syntax_errmsg(ERROR_TOKEN, "|"), false);
+	}
     else if (is_operator_token(cur) && !aft)
-        return (syntax_errmsg(ERROR_TOKEN, "newline"), 2);
-    else if (is_operator_token(cur) && cur->type != TK_PIPE
-        && is_operator_token(aft))
-        return (syntax_errmsg(ERROR_TOKEN, aft->value), 2);
-	else if (is_operator_token(cur) && cur->type != TK_HEREDOC
-		&& cur->type != TK_PIPE && !aft->value)
-		return (syntax_errmsg(AMBIGUOUS, aft->raw), 1);
-	else
-		return (0);
+	{
+		shell->exit_code = 2;
+		return (syntax_errmsg(ERROR_TOKEN, "newline"), false);
+	}
+	else if (!check_tokens_3(shell, bef, cur, aft))
+	{
+		return (false);
+	}
+	return (true);
+}
+
+bool	check_tokens_1(t_shell *shell, t_token *token)
+{
+	if (!validate_quotes(shell->input))
+	{
+		shell->exit_code = 2;
+		return (syntax_errmsg(UNMATCHED_QUOTE, NULL), false);
+	}
+	else if (!token)
+		return (false);
+	else if (ft_lstsize((t_list *)token) > ARGV_MAX)
+	{
+		shell->exit_code = 2;
+		return (syntax_errmsg(OVERFLOW, NULL), false);
+	}
+	return (true);
 }
 
 bool    validate_tokens(t_shell *shell, t_token *token)
@@ -88,24 +130,15 @@ bool    validate_tokens(t_shell *shell, t_token *token)
     t_token    *bef;
     t_token    *aft;
 
-	if (!validate_quotes(shell->input))
-	{
-		shell->exit_code = 2;
-		return (syntax_errmsg(UNMATCHED_QUOTE, NULL), false);
-	}
-	else if (!token)
-        return (false);
-	else if (ft_lstsize((t_list *)token) > ARGV_MAX)
-	{
-		shell->exit_code = 2;
-		return (syntax_errmsg(OVERFLOW, NULL), false);
-	}
+	if (!check_tokens_1(shell, token))
+		return (false);
     bef = NULL;
     aft = token->next;
     while (token)
     {
-		shell->exit_code = check_tokens(bef, token, aft);
-		if (shell->exit_code)
+		if (!check_tokens_2(shell, bef, token, aft))
+			return (false);
+		if (!check_tokens_3(shell, bef, token, aft))
 			return (false);
         bef = token;
         token = token->next;

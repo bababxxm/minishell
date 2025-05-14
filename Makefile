@@ -6,7 +6,7 @@
 #    By: pkhienko42 <pkhienko42@student.42.fr>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/18 19:44:55 by sklaokli          #+#    #+#              #
-#    Updated: 2025/05/13 23:23:42 by pkhienko42       ###   ########.fr        #
+#    Updated: 2025/05/14 19:49:18 by pkhienko42       ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -41,6 +41,7 @@ FILES		:=	\
 				builtins/export_util.c \
 				executor/execution.c \
 				executor/execution_util.c \
+				executor/execution_util2.c \
 				executor/heredoc.c \
 				io_file/io_file.c \
 				io_file/io_util.c \

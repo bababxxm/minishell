@@ -8,8 +8,10 @@ void	close_fds(t_cmds *cmd)
 			close(cmd->io_fd->stdin_backup);
 		if (cmd->io_fd->stdout_backup != -1)
 			close(cmd->io_fd->stdout_backup);
-		if (cmd->io_fd->append)
+		if (cmd->io_fd->fd_in != -1)
 			close(cmd->io_fd->fd_in);
+		if (cmd->io_fd->fd_out != -1)
+			close(cmd->io_fd->fd_out);
 		cmd = cmd->next;
 	}
 }

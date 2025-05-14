@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sklaokli <sklaokli@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pkhienko42 <pkhienko42@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 23:39:29 by sklaokli          #+#    #+#             */
-/*   Updated: 2025/05/14 02:35:19 by sklaokli         ###   ########.fr       */
+/*   Updated: 2025/05/14 21:22:35 by pkhienko42       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,7 @@ bool	handle_heredoc(t_shell *shell, t_token *limit, t_io_fd *io_fd)
 					print_err_heredoc(limit->raw);
 				break ;
 			}
-			write(pipe_fd[1], line, ft_strlen(line));
-			write(pipe_fd[1], "\n", 1);
+			ft_putendl_fd(line, pipe_fd[1]);
 		}
 		close(pipe_fd[1]);
 		io_fd->fd_in = pipe_fd[0];
@@ -66,7 +65,7 @@ bool	handle_heredoc(t_shell *shell, t_token *limit, t_io_fd *io_fd)
 		if (WIFSIGNALED(status))
 			shell->exit_code = 128 + WTERMSIG(status);
 		else if (WIFEXITED(status))
-			shell->exit_code = WEXITSTATUS(status); 
+			shell->exit_code = WEXITSTATUS(status);
 		g_childern_code = 0;
 	}
 	return (true);

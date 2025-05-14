@@ -27,21 +27,23 @@ static int	execute_builtin(t_shell *shell, t_cmds *cmd)
 	return (ret);
 }
 
-static void	run_cmd(t_shell *shell, t_cmds* cmd, char *path, int *ret)
+static int	run_cmd(t_shell *shell, t_cmds* cmd, char *path, int ret)
 {
-	
-	if (execve(path, cmd->arg, get_envp(shell->env)) == -1 && !*ret)
+	if (!cmd->cmd)
+		return (EXIT_SUCCESS);
+	if (execve(path, cmd->arg, get_envp(shell->env)) == -1 && !ret)
 	{
-		if (!cmd->cmd || cmd->cmd[0] == '\0')
+		if (cmd->cmd[0] == '\0')
 		{
 			if (cmd->cmd[0] == '\0')
-				*ret = errmsg("''", NULL, "command not found", EXIT_FAILURE);
+				ret = errmsg("''", NULL, "command not found", EXIT_FAILURE);
 			else if (!cmd->io_fd->heredoc && cmd->cmd)
-				*ret = EXIT_FAILURE;
+				ret = EXIT_FAILURE;
 		}
 		else
-			*ret = error_message(cmd->cmd, true);
+			ret = error_message(cmd->cmd, true);
 	}
+	return (ret);
 }
 
 static pid_t	execute_cmd(t_shell *shell, t_cmds *cmd, char *c)
@@ -65,24 +67,19 @@ static pid_t	execute_cmd(t_shell *shell, t_cmds *cmd, char *c)
 		if (is_builtin(c))
 			exit(execute_builtin(shell, cmd));
 		else
-		{
-			run_cmd(shell, cmd, c, &ret);
-			exit(ret);
-		}
+			exit(run_cmd(shell, cmd, c, ret));
 	}
 	else
 		close_pipe(cmd);
 	return (shell->pid);
 }
 
-static int	get_children(t_shell *shell, pid_t last_pid, int ret)
+static int	get_children(t_shell *shell, pid_t last_pid, int ret, bool is_heredoc)
 {
 	int		signum;
 	int		status;
-	bool	is_heredoc;
 	t_cmds	*cmd;
 
-	is_heredoc = false;
 	if (last_pid != -1)
 	{
 		shell->pid = wait(&status);
@@ -110,7 +107,6 @@ static int	get_children(t_shell *shell, pid_t last_pid, int ret)
 		cmd = cmd->next;
 	}
 	g_childern_code = 0;
-	shell->pid = wait(&status);
 	set_sigint(&shell->sigint, sighandler);
 	set_sigquit(&shell->sigquit, SIG_IGN);
 	if (shell->exit_code == 130 && is_heredoc)
@@ -143,5 +139,5 @@ int	execute(t_shell *shell, t_cmds *cmd, pid_t last_pid)
 		restore_io(cmd->io_fd);
 		cmd = cmd->next;
 	}
-	return (get_children(shell, last_pid, ret));
+	return (get_children(shell, last_pid, ret, false));
 }

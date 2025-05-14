@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sklaokli <sklaokli@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pkhienko42 <pkhienko42@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 02:04:03 by sklaokli          #+#    #+#             */
-/*   Updated: 2025/05/14 19:19:53 by sklaokli         ###   ########.fr       */
+/*   Updated: 2025/05/14 19:48:03 by pkhienko42       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,10 +48,12 @@ void	set_flag(t_io_fd *io_fd, int *flags);
 void	redir_in(t_token *file, t_io_fd *io_fd);
 void	redir_out(t_token *file, t_io_fd *io_fd);
 void	redir_append(t_token *file, t_io_fd *io_fd);
+void	get_sig_ret(int *signum, int *ret, int status);
 void	handle_redirection(t_shell *shell, t_token *redir, t_token *file, t_io_fd *io_fd);
 
 bool	is_dir(char *cmd);
 bool	is_builtin(char *cmd);
+bool	check_heredoc(t_cmds *cmd);
 bool	handle_heredoc(t_shell *shell, t_token *limit, t_io_fd *io_fd);
 
 char	**get_envp(t_env *env);
