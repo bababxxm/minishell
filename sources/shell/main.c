@@ -6,7 +6,7 @@
 /*   By: sklaokli <sklaokli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 21:48:01 by sklaokli          #+#    #+#             */
-/*   Updated: 2025/05/14 00:31:50 by sklaokli         ###   ########.fr       */
+/*   Updated: 2025/05/14 19:14:49 by sklaokli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ int	main(int argc, char *argv[], char **env)
 	while (true)
 	{
 		shell.input = readline(get_prompt(&shell));
-		// shell.input = readline("minishell$ ");
 		if (!shell.input)
 			exit_shell(&shell);
 		execute_cmds(&shell);
@@ -33,11 +32,31 @@ int	main(int argc, char *argv[], char **env)
 	exit_shell(&shell);
 }
 
+char	*get_exitcode(char *oldprompt, int *exitcode)
+{
+	int		i;
+	char	*newprompt;
+
+	i = 0;
+	while (oldprompt[i] && oldprompt[i] != ' ')
+		i++;
+	*exitcode = 130;
+	newprompt = strappend(B_YELLOW"["B_RED, ft_itoa(130));
+	newprompt = strappend(newprompt, B_YELLOW"]"B_RED);
+	newprompt = strappend(newprompt, &oldprompt[i]);
+	oldprompt = "";
+	return (newprompt);
+}
+
 char    *get_prompt(t_shell *shell)
 {
-    char    *path;
-    char    *prompt;
+    char    		*path;
+    static char		*prompt;
+	static int		*exitcode;
     
+	if (!shell)
+		return (get_exitcode(prompt, exitcode));
+	exitcode = &shell->exit_code;
     if (shell->exit_code == 0)
         prompt = strappend(B_YELLOW"["B_GREEN, ft_itoa(shell->exit_code));
     else
@@ -60,8 +79,6 @@ void	execute_cmds(t_shell *shell)
 	if (!shell->token)
 		return ;
 	shell->cmds = built_cmd(shell->token, shell);
-	// if (shell->exit_code == 130)
-		// return ;
 	shell->exit_code = execute(shell, shell->cmds, -1);
 }
 

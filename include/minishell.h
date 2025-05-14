@@ -6,7 +6,7 @@
 /*   By: sklaokli <sklaokli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 18:22:50 by sklaokli          #+#    #+#             */
-/*   Updated: 2025/05/14 00:55:16 by sklaokli         ###   ########.fr       */
+/*   Updated: 2025/05/14 18:41:44 by sklaokli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ typedef struct s_shell
 	int			exit_code;			
 }	t_shell;
 
-void	sighandler(int signum);
+void	sighandler(int sig);
 void	exit_shell(t_shell *shell);
 void	execute_cmds(t_shell *shell);
 void	increment_shlvl(t_env *env, char *key);
@@ -94,8 +94,7 @@ char	*strappend(char *str, char *append);
 
 int		ft_strlen_to_c(char *str, char c);
 
-void	sigchild(int sig);
-void	set_sigint(t_sa *sigint, void *ft);
-void	set_sigquit(t_sa *sigquit, void *ft);
+void	set_sigint(t_sa *sigint, void *handler);
+void	set_sigquit(t_sa *sigquit, void *handler);
 
 #endif

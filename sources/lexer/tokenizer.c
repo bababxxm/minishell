@@ -6,7 +6,7 @@
 /*   By: sklaokli <sklaokli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 22:50:03 by sklaokli          #+#    #+#             */
-/*   Updated: 2025/05/14 02:13:49 by sklaokli         ###   ########.fr       */
+/*   Updated: 2025/05/14 03:42:41 by sklaokli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ t_token	*tokenizer(t_shell *shell)
 		index = add_subtoken_index(i, shell->input, index);
 	}
 	token = merge_subtokens(token);
-	if (!validate_quotes(shell->input) || !validate_tokens(token))
+	if (!validate_tokens(shell, token))
 		return (NULL);
 	return (token);
 }

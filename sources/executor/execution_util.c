@@ -48,7 +48,8 @@ void	is_wrong_cmd(char *cmd, int *ret)
 		return ;
 	}
 	*ret = EXIT_SUCCESS;
-	close(fd);
+	if (fd >= 0)
+		close(fd);
 }
 
 char	*search_cmd(char *cmd, t_shell *shell, int *ret)

@@ -6,7 +6,7 @@
 /*   By: sklaokli <sklaokli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 23:39:29 by sklaokli          #+#    #+#             */
-/*   Updated: 2025/05/14 02:03:12 by sklaokli         ###   ########.fr       */
+/*   Updated: 2025/05/14 02:35:19 by sklaokli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ bool	handle_heredoc(t_shell *shell, t_token *limit, t_io_fd *io_fd)
 		exit_error(shell, errmsg("Pipe", NULL, strerror(errno), 1));
 	g_childern_code = 1;
 	set_sigint(&shell->sigint, SIG_IGN);
-	set_sigquit(&shell->sigquit, SIG_IGN);
+	set_sigquit(&shell->sigint, SIG_IGN);
 	pid = fork();
 	if (pid == -1)
 		exit_error(shell, errmsg("Fork", NULL, strerror(errno), 1));
@@ -61,7 +61,8 @@ bool	handle_heredoc(t_shell *shell, t_token *limit, t_io_fd *io_fd)
 		close(pipe_fd[0]);
 		close(pipe_fd[1]);
 		waitpid(pid, &status, 0);
-		// set_sigint(&shell->sigint, &sighandler);
+		set_sigint(&shell->sigint, &sighandler);
+		set_sigquit(&shell->sigint, SIG_IGN);
 		if (WIFSIGNALED(status))
 			shell->exit_code = 128 + WTERMSIG(status);
 		else if (WIFEXITED(status))

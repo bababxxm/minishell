@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pkhienko42 <pkhienko42@student.42.fr>      +#+  +:+       +#+        */
+/*   By: sklaokli <sklaokli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 18:40:43 by sklaokli          #+#    #+#             */
-/*   Updated: 2025/05/13 23:20:23 by pkhienko42       ###   ########.fr       */
+/*   Updated: 2025/05/14 03:43:01 by sklaokli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ void	add_token(int index, char **str, short type, t_token **token);
 bool	is_operator(char c);
 bool	has_expand(char *str);
 bool	validate_quotes(char *str);
-bool	validate_tokens(t_token *token);
+bool	validate_tokens(t_shell *shell, t_token *token);
 bool	token_strjoin(t_token **token, t_token *subtoken, int index);
 
 char	*cut_invalid_expand(char *str);

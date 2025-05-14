@@ -29,6 +29,7 @@ static int	execute_builtin(t_shell *shell, t_cmds *cmd)
 
 static void	run_cmd(t_shell *shell, t_cmds* cmd, char *path, int *ret)
 {
+	
 	if (execve(path, cmd->arg, get_envp(shell->env)) == -1 && !*ret)
 	{
 		if (!cmd->cmd || cmd->cmd[0] == '\0')
@@ -55,8 +56,8 @@ static pid_t	execute_cmd(t_shell *shell, t_cmds *cmd, char *c)
 		exit_error(shell, errmsg("Fork", NULL, strerror(errno), 1));
 	if (!shell->pid)
 	{
-		set_sigint(&shell->sigint, &sighandler);
-		set_sigquit(&shell->sigquit, &sigchild);
+		set_sigint(&shell->sigint, SIG_DFL);
+		set_sigquit(&shell->sigquit, SIG_DFL);	
 		setup_pipe(cmd);
 		ret = setup_redirect(cmd->io_fd);
 		if (ret)
@@ -76,6 +77,7 @@ static pid_t	execute_cmd(t_shell *shell, t_cmds *cmd, char *c)
 
 static int	get_children(t_shell *shell, pid_t last_pid, int ret)
 {
+	int		signum;
 	int		status;
 	bool	is_heredoc;
 	t_cmds	*cmd;
@@ -84,15 +86,17 @@ static int	get_children(t_shell *shell, pid_t last_pid, int ret)
 	if (last_pid != -1)
 	{
 		shell->pid = wait(&status);
-		set_sigint(&shell->sigint, &sighandler);
-		set_sigquit(&shell->sigquit, &sighandler);
 		while (shell->pid > 0)
 		{
 			if (shell->pid == last_pid)
 			{
-				if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
-					ret = 128 + WTERMSIG(status);
-				else if (WIFEXITED(status))
+				signum = WTERMSIG(status);
+				if (signum == SIGINT)
+					write(STDOUT_FILENO, "\n", 1);
+				else if (signum == SIGQUIT)
+					write(STDOUT_FILENO, "Quit (core dumped)\n", 20);
+				ret = 128 + signum;
+				if (WIFEXITED(status))
 					ret = WEXITSTATUS(status);
 			}
 			shell->pid = wait(&status);
@@ -106,6 +110,9 @@ static int	get_children(t_shell *shell, pid_t last_pid, int ret)
 		cmd = cmd->next;
 	}
 	g_childern_code = 0;
+	shell->pid = wait(&status);
+	set_sigint(&shell->sigint, sighandler);
+	set_sigquit(&shell->sigquit, SIG_IGN);
 	if (shell->exit_code == 130 && is_heredoc)
 		return (130);
 	return (ret);
