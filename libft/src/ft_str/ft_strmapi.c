@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strmapi.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pkhienko42 <pkhienko42@student.42.fr>      +#+  +:+       +#+        */
+/*   By: sklaokli <sklaokli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 21:15:54 by pkhienko          #+#    #+#             */
-/*   Updated: 2025/05/07 23:35:21 by pkhienko42       ###   ########.fr       */
+/*   Updated: 2025/05/14 21:33:41 by sklaokli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ char	*ft_strmapi(char const *s, char (*f)(unsigned int, char))
 
 	if (!s || !f)
 		return (NULL);
-	tmp = (char *)safealloc(ft_strlen(s) + 1,sizeof(char));
+	tmp = (char *)safealloc(ft_strlen(s) + 1, sizeof(char));
 	if (!tmp)
 		return (NULL);
 	i = 0;

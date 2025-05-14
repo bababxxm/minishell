@@ -6,7 +6,7 @@
 /*   By: sklaokli <sklaokli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 00:55:17 by sklaokli          #+#    #+#             */
-/*   Updated: 2025/05/14 19:19:34 by sklaokli         ###   ########.fr       */
+/*   Updated: 2025/05/15 01:43:29 by sklaokli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,8 +46,11 @@ int	errmsg(char *cmd, char *detail, char *err_msg, int err_nb)
 	return (err_nb);
 }
 
-static int	print_error(char *cmd, int fd)
+static int	print_error(t_shell *shell, char *cmd, int fd)
 {
+	if (!ft_strncmp("~", cmd, -1) && ft_strlen(cmd) == 1)
+		return (errmsg(shell->home, NULL, "Is a directory",
+				CMD_NOT_EXECUTABLE));
 	if (!ft_strchr(cmd, '/'))
 	{
 		if (fd >= 0)
@@ -86,13 +89,13 @@ static int	non_print_error(char *cmd, int fd)
 	return (EXIT_SUCCESS);
 }
 
-int	error_message(char *cmd, bool print)
+int	error_message(t_shell *shell, char *cmd, bool print)
 {
 	int	fd;
 
 	fd = open(cmd, O_WRONLY);
 	if (print)
-		return (print_error(cmd, fd));
+		return (print_error(shell, cmd, fd));
 	else
 		return (non_print_error(cmd, fd));
 	if (fd >= 0)

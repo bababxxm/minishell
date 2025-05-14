@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pkhienko42 <pkhienko42@student.42.fr>      +#+  +:+       +#+        */
+/*   By: sklaokli <sklaokli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 00:53:24 by sklaokli          #+#    #+#             */
-/*   Updated: 2025/05/13 20:00:20 by pkhienko42       ###   ########.fr       */
+/*   Updated: 2025/05/14 22:07:33 by sklaokli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static long long	ft_atol(const char *str)
+static long long	ft_atol(char *str)
 {
 	unsigned long long	res;
 	int					sign;
@@ -23,20 +23,18 @@ static long long	ft_atol(const char *str)
 	res = 0;
 	sign = 1;
 	i = 0;
-	while (ft_isspace(str[i]))
-		i++;
+	i = skip_space(i, str);
 	if (str[i] == '+' || str[i] == '-')
 		if (str[i++] == '-')
 			sign = -sign;
 	while (str[i] >= '0' && str[i] <= '9')
 	{
 		res = res * 10 + (str[i++] - '0');
-		if ((sign == -1 && res > (unsigned long long)LONG_MAX + 1) ||
-			(sign == 1 && res > (unsigned long long)LONG_MAX))
+		if ((sign == -1 && res > (unsigned long long)LONG_MAX + 1)
+			|| (sign == 1 && res > (unsigned long long)LONG_MAX))
 			return (257);
 	}
-	while (ft_isspace(str[i]))
-		i++;
+	i = skip_space(i, str);
 	if (str[i] != '\0')
 		return (257);
 	return (((long long)(res * sign)) % 256);
@@ -49,7 +47,6 @@ static bool	is_number(char *str)
 	if (!str)
 		return (true);
 	i = 0;
-
 	while (ft_isspace(str[i]))
 		i++;
 	if (str[i] == '-' || str[i] == '+')
@@ -70,10 +67,11 @@ int	ft_exit(t_shell *shell, char **av)
 {
 	int	cnt;
 
-	cnt = -1;
-	while (av[++cnt]);
+	cnt = 0;
+	while (av[cnt])
+		cnt++;
 	shell->exit_code = ft_atol(av[1]);
-	if (cnt > 1 && (!is_number(av[1]) || av[1][0] =='\0'))
+	if (cnt > 1 && (!is_number(av[1]) || av[1][0] == '\0'))
 		shell->exit_code = errmsg(av[0], av[1], "numeric argument required", 2);
 	else if (shell->exit_code == 257)
 		shell->exit_code = errmsg(av[0], av[1], "numeric argument required", 2);

@@ -6,7 +6,7 @@
 #    By: sklaokli <sklaokli@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/04/19 21:00:46 by pkhienko          #+#    #+#              #
-#    Updated: 2025/05/14 19:31:09 by sklaokli         ###   ########.fr        #
+#    Updated: 2025/05/15 01:10:51 by sklaokli         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -83,10 +83,10 @@ AR          := ar rcs
 RM          := rm -rf
 
 ## Color Codes
-CYAN        := \033[0;36m
-GREEN       := \033[0;32m
-RED         := \033[0;31m
-BLUE        := \033[0;34m
+CYAN        := \033[1;36m
+GREEN       := \033[1;32m
+RED         := \033[1;31m
+BLUE        := \033[1;34m
 RESET       := \033[0m
 
 ## Progress Counters

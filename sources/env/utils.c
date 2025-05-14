@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pkhienko42 <pkhienko42@student.42.fr>      +#+  +:+       +#+        */
+/*   By: sklaokli <sklaokli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/06 18:28:21 by sklaokli          #+#    #+#             */
-/*   Updated: 2025/05/07 23:47:27 by pkhienko42       ###   ########.fr       */
+/*   Updated: 2025/05/14 21:41:27 by sklaokli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,4 +35,3 @@ char	*get_value(t_env *env, char *key)
 	else
 		return (var->value);
 }
-

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   io_file.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sklaokli <sklaokli@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/05/14 21:49:54 by sklaokli          #+#    #+#             */
+/*   Updated: 2025/05/14 21:54:29 by sklaokli         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 void	close_fds(t_cmds *cmd)
@@ -43,53 +55,53 @@ void	restore_io(t_io_fd *io_fd)
 {
 	if (!io_fd)
 		return ;
-	if (io_fd->stdin_backup != -1) 
+	if (io_fd->stdin_backup != -1)
 	{
 		dup2(io_fd->stdin_backup, STDIN_FILENO);
 		close(io_fd->stdin_backup);
 		io_fd->stdin_backup = -1;
 	}
-	if (io_fd->stdout_backup != -1) 
+	if (io_fd->stdout_backup != -1)
 	{
 		dup2(io_fd->stdout_backup, STDOUT_FILENO);
 		close(io_fd->stdout_backup);
 		io_fd->stdout_backup = -1;
 	}
 	if (io_fd->fd_in != -1)
-    {
-        close(io_fd->fd_in);
-        io_fd->fd_in = -1;
-    }
-    
-    if (io_fd->fd_out != -1)
-    {
-        close(io_fd->fd_out);
-        io_fd->fd_out = -1;
-    }
+	{
+		close(io_fd->fd_in);
+		io_fd->fd_in = -1;
+	}
+	if (io_fd->fd_out != -1)
+	{
+		close(io_fd->fd_out);
+		io_fd->fd_out = -1;
+	}
 }
 
-int	setup_redirect(t_io_fd *io_fd)
+int	setup_redirect(t_io_fd *io_fd, int flags)
 {
-	int		flags;
-
 	if (io_fd->in_file)
 	{
 		io_fd->fd_in = open(io_fd->in_file, O_RDONLY);
 		if (io_fd->fd_in < 0)
-			return (errmsg(io_fd->in_file, NULL, "No such file or directory", 1));
+			return (errmsg(io_fd->in_file, NULL,
+					"No such file or directory", 1));
 		dup_close(io_fd->fd_in, STDIN_FILENO);
 	}
 	else if (io_fd->fd_in != -1 && io_fd->heredoc)
 		dup_close(io_fd->fd_in, STDIN_FILENO);
 	if (io_fd->out_file)
 	{
-		if (access(io_fd->out_file, F_OK));
+		if (access(io_fd->out_file, F_OK))
+			;
 		else if (access(io_fd->out_file, W_OK))
 			return (errmsg(io_fd->out_file, NULL, "Permission denied", 1));
 		set_flag(io_fd, &flags);
 		io_fd->fd_out = open(io_fd->out_file, flags, 0644);
 		if (io_fd->fd_out < 0)
-			return (errmsg(io_fd->out_file, NULL, "No such file or directory", 1));
+			return (errmsg(io_fd->out_file, NULL,
+					"No such file or directory", 1));
 		dup_close(io_fd->fd_out, STDOUT_FILENO);
 	}
 	return (0);

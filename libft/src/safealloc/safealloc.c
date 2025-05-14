@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   safealloc.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pkhienko42 <pkhienko42@student.42.fr>      +#+  +:+       +#+        */
+/*   By: sklaokli <sklaokli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 19:25:33 by pkhienko42        #+#    #+#             */
-/*   Updated: 2025/05/07 23:04:11 by pkhienko42       ###   ########.fr       */
+/*   Updated: 2025/05/14 22:05:52 by sklaokli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ static t_list	**get_tracker_head(void)
 	return (&tracker_head);
 }
 
-
 /**
 * Add a pointer to the static memory pointer list
 *
@@ -34,7 +33,6 @@ static void	track_allocated_ptr(void *ptr)
 {
 	ft_lstadd_back(get_tracker_head(), ft_lstnew(ptr));
 }
-
 
 /**
 * Frees all memory that was allocated using `safealloc`.

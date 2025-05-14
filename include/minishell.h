@@ -6,7 +6,7 @@
 /*   By: sklaokli <sklaokli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 18:22:50 by sklaokli          #+#    #+#             */
-/*   Updated: 2025/05/14 18:41:44 by sklaokli         ###   ########.fr       */
+/*   Updated: 2025/05/15 03:39:07 by sklaokli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,8 +44,6 @@
 # define RED "\001\033[0;31m\002"
 # define RESET "\001\033[0m\002" 
 
-# define PROMPT B_RED"Minishell "
-
 # ifndef PATH_MAX
 #  define PATH_MAX 4096
 # endif
@@ -55,7 +53,7 @@
 # endif
 
 extern volatile sig_atomic_t	g_childern_code;
-typedef	struct sigaction		t_sa;
+typedef struct sigaction		t_sa;
 
 typedef enum e_exit_code
 {
@@ -89,7 +87,7 @@ void	init_shell(t_shell *shell, char **env);
 void	exit_error(t_shell *shell, int err_nb);
 void	increment_shlvl(t_env *env, char *key);
 
-char    *get_prompt(t_shell *shell);
+char	*get_prompt(t_shell *shell);
 char	*strappend(char *str, char *append);
 
 int		ft_strlen_to_c(char *str, char c);

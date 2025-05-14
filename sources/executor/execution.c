@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   execution.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sklaokli <sklaokli@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/05/14 21:42:25 by sklaokli          #+#    #+#             */
+/*   Updated: 2025/05/15 02:00:23 by sklaokli         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 static int	execute_builtin(t_shell *shell, t_cmds *cmd)
@@ -27,7 +39,7 @@ static int	execute_builtin(t_shell *shell, t_cmds *cmd)
 	return (ret);
 }
 
-static int	run_cmd(t_shell *shell, t_cmds* cmd, char *path, int ret)
+static int	run_cmd(t_shell *shell, t_cmds *cmd, char *path, int ret)
 {
 	if (!cmd->cmd)
 		return (EXIT_SUCCESS);
@@ -36,12 +48,12 @@ static int	run_cmd(t_shell *shell, t_cmds* cmd, char *path, int ret)
 		if (cmd->cmd[0] == '\0')
 		{
 			if (cmd->cmd[0] == '\0')
-				ret = errmsg("''", NULL, "command not found", EXIT_FAILURE);
+				ret = errmsg("''", NULL, "command not found", CMD_NOT_FOUND);
 			else if (!cmd->io_fd->heredoc && cmd->cmd)
 				ret = EXIT_FAILURE;
 		}
 		else
-			ret = error_message(cmd->cmd, true);
+			ret = error_message(shell, cmd->cmd, true);
 	}
 	return (ret);
 }
@@ -59,9 +71,9 @@ static pid_t	execute_cmd(t_shell *shell, t_cmds *cmd, char *c)
 	if (!shell->pid)
 	{
 		set_sigint(&shell->sigint, SIG_DFL);
-		set_sigquit(&shell->sigquit, SIG_DFL);	
+		set_sigquit(&shell->sigquit, SIG_DFL);
 		setup_pipe(cmd);
-		ret = setup_redirect(cmd->io_fd);
+		ret = setup_redirect(cmd->io_fd, 0);
 		if (ret)
 			exit(ret);
 		if (is_builtin(c))
@@ -74,38 +86,11 @@ static pid_t	execute_cmd(t_shell *shell, t_cmds *cmd, char *c)
 	return (shell->pid);
 }
 
-static int	get_children(t_shell *shell, pid_t last_pid, int ret, bool is_heredoc)
+static int	
+	get_children(t_shell *shell, pid_t last_pid, int ret, bool is_heredoc)
 {
-	int		signum;
-	int		status;
-	t_cmds	*cmd;
-
-	if (last_pid != -1)
-	{
-		shell->pid = wait(&status);
-		while (shell->pid > 0)
-		{
-			if (shell->pid == last_pid)
-			{
-				signum = WTERMSIG(status);
-				if (signum == SIGINT)
-					write(STDOUT_FILENO, "\n", 1);
-				else if (signum == SIGQUIT)
-					write(STDOUT_FILENO, "Quit (core dumped)\n", 20);
-				ret = 128 + signum;
-				if (WIFEXITED(status))
-					ret = WEXITSTATUS(status);
-			}
-			shell->pid = wait(&status);
-		}
-	}
-	cmd = shell->cmds;
-	while (cmd)
-	{
-		if (cmd->io_fd->heredoc)
-			is_heredoc = true;
-		cmd = cmd->next;
-	}
+	get_sig_ret(shell, last_pid, &ret);
+	is_heredoc = check_heredoc(shell->cmds);
 	g_childern_code = 0;
 	set_sigint(&shell->sigint, sighandler);
 	set_sigquit(&shell->sigquit, SIG_IGN);
@@ -126,7 +111,7 @@ int	execute(t_shell *shell, t_cmds *cmd, pid_t last_pid)
 		backup_io(cmd);
 		if (is_builtin(cmd->cmd) && !cmd->next && !cmd->prev)
 		{
-			ret = setup_redirect(cmd->io_fd);
+			ret = setup_redirect(cmd->io_fd, 0);
 			if (!ret)
 				ret = execute_builtin(shell, cmd);
 		}

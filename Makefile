@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: pkhienko42 <pkhienko42@student.42.fr>      +#+  +:+       +#+         #
+#    By: sklaokli <sklaokli@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/18 19:44:55 by sklaokli          #+#    #+#              #
-#    Updated: 2025/05/14 19:49:18 by pkhienko42       ###   ########.fr        #
+#    Updated: 2025/05/15 01:10:20 by sklaokli         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,6 +19,7 @@ INC_DIR		:=	include
 
 FILES		:=	\
 				shell/main.c \
+				shell/prompt.c \
 				env/env.c \
 				env/utils.c \
 				init/init.c \
@@ -31,6 +32,7 @@ FILES		:=	\
 				lexer/subtoken.c \
 				lexer/utils.c \
 				lexer/parser.c \
+				lexer/check.c \
 				builtins/cd.c \
 				builtins/env.c \
 				builtins/pwd.c \
@@ -62,11 +64,11 @@ WFLAGS		:=	-Wall -Wextra -Werror
 RLFLAGS		:=	-lreadline -lhistory
 VFLAGS		:=	--track-fds=yes --trace-children=yes --leak-check=full --show-leak-kinds=all
 
-CYAN		:=	\033[0;36m
-GREEN		:=	\033[0;32m
-RED			:=	\033[0;31m
-BLUE		:=	\033[0;34m
-YELLOW		:=	\033[0;33m
+CYAN		:=	\033[1;36m
+GREEN		:=	\033[1;32m
+RED			:=	\033[1;31m
+BLUE		:=	\033[1;34m
+YELLOW		:=	\033[1;33m
 RESET		:=	\033[0m
 
 TOTAL_FILES	:=	$(words $(OBJ))

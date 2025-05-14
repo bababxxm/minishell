@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pkhienko42 <pkhienko42@student.42.fr>      +#+  +:+       +#+        */
+/*   By: sklaokli <sklaokli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 22:44:48 by sklaokli          #+#    #+#             */
-/*   Updated: 2025/05/07 23:49:12 by pkhienko42       ###   ########.fr       */
+/*   Updated: 2025/05/15 01:58:57 by sklaokli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ t_env	*new_env(char *key, char equal, char *value)
 {
 	t_env	*new;
 
-	new = safealloc(1,  sizeof(t_env));
+	new = safealloc(1, sizeof(t_env));
 	new->key = key;
 	new->equal = equal;
 	new->value = value;

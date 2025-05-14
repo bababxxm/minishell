@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   signal.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sklaokli <sklaokli@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/05/14 21:55:48 by sklaokli          #+#    #+#             */
+/*   Updated: 2025/05/14 21:56:02 by sklaokli         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 void	sighandler(int sig)
@@ -28,7 +40,7 @@ void	set_sigquit(t_sa *sigquit, void *handler)
 	sigaction(SIGQUIT, sigquit, NULL);
 }
 
-void 	heredoc_sig_handler(int sig)
+void	heredoc_sig_handler(int sig)
 {
 	if (g_childern_code && sig == SIGINT)
 	{

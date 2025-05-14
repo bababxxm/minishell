@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   built_util2.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sklaokli <sklaokli@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/05/14 21:49:04 by sklaokli          #+#    #+#             */
+/*   Updated: 2025/05/14 22:27:36 by sklaokli         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 t_token	*get_token_end(t_token *token)
@@ -16,7 +28,8 @@ t_token	*get_token_end(t_token *token)
 	return (cur);
 }
 
-void	handle_redirection(t_shell *shell, t_token *redir, t_token *file, t_io_fd *io_fd)
+void	handle_redirection(t_shell *shell, t_token *redir,
+							t_token *file, t_io_fd *io_fd)
 {
 	if (!file || file->type != TK_WORD)
 	{
@@ -31,4 +44,9 @@ void	handle_redirection(t_shell *shell, t_token *redir, t_token *file, t_io_fd *
 		redir_append(file, io_fd);
 	else if (redir->type == TK_HEREDOC)
 		io_fd->heredoc = handle_heredoc(shell, file, io_fd);
+}
+
+inline bool	is_valid_pipe(t_token *s, t_token *e)
+{
+	return (s && (s != e || s->type != TK_PIPE));
 }

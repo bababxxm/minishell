@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   execution_util.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sklaokli <sklaokli@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/05/14 21:44:36 by sklaokli          #+#    #+#             */
+/*   Updated: 2025/05/15 04:14:27 by sklaokli         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 void	heredoc_sig_handler(int sig);
@@ -7,30 +19,27 @@ char	**get_envp(t_env *env)
 	char	**envp;
 	t_env	*tmp;
 	int		len;
+	int		i;
 
-	len = 0;
-	tmp = env;
-	envp = NULL;
-	while (tmp)
-	{
-		len++;
-		tmp = tmp->next;
-	}
+	i = 0;
+	len = ft_lstsize((t_list *)env);
 	envp = safealloc(len + 1, sizeof(char *));
 	tmp = env;
-	len = 0;
 	while (tmp)
 	{
-		envp[len] = strappend(ft_strdup(tmp->key), ft_strdup("="));
-		envp[len] = strappend(envp[len], ft_strdup(tmp->value));
+		envp[i] = strappend(ft_strdup(tmp->key), ft_strdup("="));
+		if (!tmp->value)
+			envp[i] = strappend(envp[i], ft_strdup(""));
+		else
+			envp[i] = strappend(envp[i], ft_strdup(tmp->value));
 		tmp = tmp->next;
-		len++;
+		i++;
 	}
-	envp[len] = NULL;
+	envp[i] = NULL;
 	return (envp);
 }
 
-void	is_wrong_cmd(char *cmd, int *ret)
+static void	is_wrong_cmd(char *cmd, int *ret)
 {
 	int	fd;
 
@@ -39,10 +48,11 @@ void	is_wrong_cmd(char *cmd, int *ret)
 	fd = open(cmd, O_WRONLY);
 	if (ft_strchr(cmd, '/') && fd == -1 && !is_dir(cmd))
 	{
-		if (access(cmd, R_OK))
+		if (fd == -1 && !is_dir(cmd))
+			*ret = errmsg(cmd, NULL,
+					"No such file or directory", CMD_NOT_FOUND);
+		else if (access(cmd, R_OK))
 			*ret = errmsg(cmd, NULL, "Permission denied", CMD_NOT_EXECUTABLE);
-		else if (fd == -1 && !is_dir(cmd))
-			*ret = errmsg(cmd, NULL, "No such file or directory", CMD_NOT_FOUND);
 		else
 			*ret = errmsg(cmd, NULL, "command not found", CMD_NOT_FOUND);
 		return ;
@@ -78,20 +88,19 @@ char	*search_cmd(char *cmd, t_shell *shell, int *ret)
 	return (ft_strdup(cmd));
 }
 
-bool is_builtin(char *cmd)
+bool	is_builtin(char *cmd)
 {
-    if (!cmd)
-        return (false);    
-    if ((!ft_strncmp(cmd, "cd", 2) && ft_strlen(cmd) == 2)
-        || (!ft_strncmp(cmd, "echo", 4) && ft_strlen(cmd) == 4)
-        || (!ft_strncmp(cmd, "env", 3) && ft_strlen(cmd) == 3)
-        || (!ft_strncmp(cmd, "export", 6) && ft_strlen(cmd) == 6)
-        || (!ft_strncmp(cmd, "pwd", 3) && ft_strlen(cmd) == 3)
-        || (!ft_strncmp(cmd, "unset", 5) && ft_strlen(cmd) == 5)
-        || (!ft_strncmp(cmd, "exit", 4) && ft_strlen(cmd) == 4))
-        return (true);
-        
-    return (false);
+	if (!cmd)
+		return (false);
+	if ((!ft_strncmp(cmd, "cd", -1) && ft_strlen(cmd) == 2)
+		|| (!ft_strncmp(cmd, "echo", -1) && ft_strlen(cmd) == 4)
+		|| (!ft_strncmp(cmd, "env", -1) && ft_strlen(cmd) == 3)
+		|| (!ft_strncmp(cmd, "export", -1) && ft_strlen(cmd) == 6)
+		|| (!ft_strncmp(cmd, "pwd", -1) && ft_strlen(cmd) == 3)
+		|| (!ft_strncmp(cmd, "unset", -1) && ft_strlen(cmd) == 5)
+		|| (!ft_strncmp(cmd, "exit", -1) && ft_strlen(cmd) == 4))
+		return (true);
+	return (false);
 }
 
 bool	is_dir(char *cmd)
