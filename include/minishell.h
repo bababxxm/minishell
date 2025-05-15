@@ -6,7 +6,7 @@
 /*   By: sklaokli <sklaokli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/05 18:22:50 by sklaokli          #+#    #+#             */
-/*   Updated: 2025/05/15 03:39:07 by sklaokli         ###   ########.fr       */
+/*   Updated: 2025/05/15 15:45:33 by sklaokli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@
 # include <unistd.h>
 # include <stdlib.h>
 # include <signal.h>
-# include <string.h>
 # include <stdbool.h>
 # include <sys/stat.h>
 # include <sys/wait.h>
