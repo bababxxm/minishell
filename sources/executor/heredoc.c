@@ -6,7 +6,7 @@
 /*   By: sklaokli <sklaokli@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 23:39:29 by sklaokli          #+#    #+#             */
-/*   Updated: 2025/05/14 22:17:32 by sklaokli         ###   ########.fr       */
+/*   Updated: 2025/05/28 23:05:06 by sklaokli         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,11 +26,13 @@ static void	print_err_heredoc(char *line, char *limit)
 	}
 }
 
-static void	parrent_process(t_shell *shell, int pipe_fd[2], pid_t pid)
+static void	parrent_process(t_shell *shell, t_io_fd *io_fd, int pipe_fd[2], pid_t pid)
 {
 	int	status;
 
-	close(pipe_fd[0]);
+	// close(pipe_fd[0]);
+	// (void)io_fd;
+	io_fd->fd_in = pipe_fd[0];
 	close(pipe_fd[1]);
 	waitpid(pid, &status, 0);
 	set_sigint(&shell->sigint, &sighandler);
@@ -59,7 +61,9 @@ static void	child_process(t_token *limit, t_io_fd *io_fd, int pipe_fd[2])
 		ft_putendl_fd(line, pipe_fd[1]);
 	}
 	close(pipe_fd[1]);
-	io_fd->fd_in = pipe_fd[0];
+	close(pipe_fd[0]);
+	(void)io_fd;
+	// io_fd->fd_in = pipe_fd[0];
 	exit(EXIT_SUCCESS);
 }
 
@@ -82,6 +86,6 @@ bool	handle_heredoc(t_shell *shell, t_token *limit, t_io_fd *io_fd)
 		child_process(limit, io_fd, pipe_fd);
 	}
 	else
-		parrent_process(shell, pipe_fd, pid);
+		parrent_process(shell, io_fd, pipe_fd, pid);
 	return (true);
 }
